@@ -2,6 +2,7 @@ package com.shadcanard.redcraft.common.blocks.machine;
 
 import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.BlockBase;
+import com.sun.istack.internal.NotNull;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyDirection;
@@ -18,7 +19,7 @@ import javax.annotation.Nullable;
 
 public abstract class BlockMachineBase extends BlockBase implements ITileEntityProvider {
 
-    public static final PropertyDirection FACING = BlockHorizontal.FACING;
+    private static final PropertyDirection FACING = BlockHorizontal.FACING;
 
     public BlockMachineBase(String blockName) {
         super(blockName);
@@ -27,11 +28,12 @@ public abstract class BlockMachineBase extends BlockBase implements ITileEntityP
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public IBlockState getStateForPlacement(@Nullable World world, @Nullable BlockPos pos, @Nullable EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
     @Override
+    @SuppressWarnings({"deprecation"})
     public IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
 
@@ -53,9 +55,8 @@ public abstract class BlockMachineBase extends BlockBase implements ITileEntityP
         return new BlockStateContainer(this, FACING);
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nullable World worldIn, int meta) {
         return null;
     }
 }
