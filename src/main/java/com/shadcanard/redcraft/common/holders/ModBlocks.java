@@ -1,5 +1,6 @@
 package com.shadcanard.redcraft.common.holders;
 
+import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.BlockRedIngot;
 import com.shadcanard.redcraft.common.blocks.furnace.BlockRedFurnace;
 import com.shadcanard.redcraft.common.blocks.generator.BlockGenerator;
@@ -28,6 +29,7 @@ public class ModBlocks {
 
     @SideOnly(Side.CLIENT)
     public static void initModels(){
+        RedCraft.logger.info("Registering Block Models");
         blockRedIngot.initModel();
         blockGenerator.initModel();
         blockRedFurnace.initModel();

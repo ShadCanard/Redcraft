@@ -24,7 +24,7 @@ public class RedCraft {
     @Mod.Instance
     public static RedCraft instance;
 
-    private static Logger logger;
+    public static Logger logger;
 
     public static final CreativeTabs redcraftMachineCreativeTab = new CreativeTabs(Names.Misc.MACHINE_CREATIVE_TAB) {
         @Override

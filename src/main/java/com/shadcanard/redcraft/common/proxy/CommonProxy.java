@@ -27,21 +27,26 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e){
+        RedCraft.logger.info("RedCraft Pre-Init");
 
     }
 
     public void init(FMLInitializationEvent e){
+        RedCraft.logger.info("RedCraft Init");
         SmeltingHelper.addSmelting();
         NetworkRegistry.INSTANCE.registerGuiHandler(RedCraft.instance, new GuiHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e){
+        RedCraft.logger.info("RedCraft Post-Init");
+
+        RedCraft.logger.info("RedCraft is fully initialized !");
 
     }
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event){
-
+        RedCraft.logger.info("Registering Blocks");
         //region Basic Blocks
         event.getRegistry().register(new BlockRedIngot());
         event.getRegistry().register(new BlockGenerator());
@@ -55,17 +60,18 @@ public class CommonProxy {
     }
 
     private static void registerTileEntities() {
+        RedCraft.logger.info("Registering Tile Entities");
         GameRegistry.registerTileEntity(TileRedFurnace.class, TileRedFurnace.resourceLocation);
         GameRegistry.registerTileEntity(TileSolarFurnace.class, TileSolarFurnace.resourceLocation);
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event){
-
         //region Item Blocks
         registerItemBlocks(event);
         //endregion
 
+        RedCraft.logger.info("Registering Items");
         //region Items
         event.getRegistry().register(new ItemRedIngot());
         event.getRegistry().register(new ItemRedDust());
@@ -77,6 +83,7 @@ public class CommonProxy {
     }
 
     private static void registerItemBlocks(RegistryEvent.Register<Item> event){
+        RedCraft.logger.info("Registering Item Blocks");
         event.getRegistry().register(new ItemBlock(ModBlocks.blockRedIngot).setRegistryName(ModBlocks.blockRedIngot.resourceLocation));
         event.getRegistry().register(new ItemBlock(ModBlocks.blockGenerator).setRegistryName(ModBlocks.blockGenerator.resourceLocation));
         event.getRegistry().register(new ItemBlock(ModBlocks.blockRedFurnace).setRegistryName(ModBlocks.blockRedFurnace.resourceLocation));

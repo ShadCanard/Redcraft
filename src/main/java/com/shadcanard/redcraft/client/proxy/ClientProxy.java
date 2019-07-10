@@ -1,5 +1,6 @@
 package com.shadcanard.redcraft.client.proxy;
 
+import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.holders.ModBlocks;
 import com.shadcanard.redcraft.common.holders.ModItems;
 import com.shadcanard.redcraft.common.proxy.CommonProxy;
@@ -30,6 +31,7 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event){
+        RedCraft.logger.info("Registering Models");
         ModBlocks.initModels();
         ModItems.initModels();
     }

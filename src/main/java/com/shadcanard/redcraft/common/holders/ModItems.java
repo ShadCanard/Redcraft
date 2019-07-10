@@ -1,5 +1,6 @@
 package com.shadcanard.redcraft.common.holders;
 
+import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.items.*;
@@ -31,6 +32,7 @@ public class ModItems {
 
     @SideOnly(Side.CLIENT)
     public static void initModels(){
+        RedCraft.logger.info("Registering Item Models");
         redIngot.initModel();
         redDust.initModel();
         goldDust.initModel();
