@@ -2,7 +2,6 @@ package com.shadcanard.redcraft.common.blocks.machine;
 
 import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.BlockBase;
-import com.sun.istack.internal.NotNull;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyDirection;
@@ -15,6 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BlockMachineBase extends BlockBase implements ITileEntityProvider {
@@ -27,11 +27,13 @@ public abstract class BlockMachineBase extends BlockBase implements ITileEntityP
         setCreativeTab(RedCraft.redcraftMachineCreativeTab);
     }
 
+    @Nonnull
     @Override
     public IBlockState getStateForPlacement(@Nullable World world, @Nullable BlockPos pos, @Nullable EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings({"deprecation"})
     public IBlockState getStateFromMeta(int meta) {
@@ -50,6 +52,7 @@ public abstract class BlockMachineBase extends BlockBase implements ITileEntityP
         return state.getValue(FACING).getIndex();
     }
 
+    @Nonnull
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);
