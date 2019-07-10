@@ -11,6 +11,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ContainerRedFurnace extends Container {
 
@@ -71,7 +72,7 @@ public class ContainerRedFurnace extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nullable EntityPlayer playerIn) {
         return te.canInteractWith(playerIn);
     }
 

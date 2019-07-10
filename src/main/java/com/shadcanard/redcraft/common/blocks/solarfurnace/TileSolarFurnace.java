@@ -24,7 +24,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     //region Variables
     private static final int INPUT_SLOT_SIZE = 4;
     private static final int OUTPUT_SLOT_SIZE = 4;
-    public static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
+    static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
     private static final int MAX_PROGRESS = 800;
     public static final ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_SOLAR_FURNACE);
 
@@ -64,22 +64,22 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     public int getProgress() {
         return progress;
     }
-    public void setProgress(int progress) {
+    void setProgress(int progress) {
         this.progress = progress;
     }
 
 
-    public int getInputStackSize(){
+    int getInputStackSize(){
         return INPUT_SLOT_SIZE;
     }
-    public int getOutputStackSize(){
+    int getOutputStackSize(){
         return INPUT_SLOT_SIZE;
     }
 
     public int getClientProgress() {
         return clientProgress;
     }
-    public void setClientProgress(int clientProgress) {
+    void setClientProgress(int clientProgress) {
         this.clientProgress = clientProgress;
     }
     //endregion
@@ -104,7 +104,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
         return compound;
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn){
+    boolean canInteractWith(EntityPlayer playerIn){
         return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D,0.5D,0.5D)) <= 64D;
     }
 

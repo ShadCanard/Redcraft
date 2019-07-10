@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class ItemCraftmojiTablet extends ItemBase {
 
@@ -24,6 +25,6 @@ public class ItemCraftmojiTablet extends ItemBase {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nullable EnumHand handIn) {
         BlockPos pos = playerIn.getPosition();
         playerIn.openGui(RedCraft.instance, References.GUI_CRAFTMOJI_TABLET, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.onItemRightClick(worldIn, playerIn, Objects.requireNonNull(handIn));
     }
 }

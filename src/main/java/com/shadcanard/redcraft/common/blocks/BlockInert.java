@@ -4,7 +4,7 @@ import com.shadcanard.redcraft.common.RedCraft;
 
 class BlockInert extends BlockBase {
 
-    public BlockInert(String blockName) {
+    BlockInert(String blockName) {
         super(blockName);
         setCreativeTab(RedCraft.redcraftResourceCreativeTab);
     }
