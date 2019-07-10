@@ -1,0 +1,10 @@
+# Created by .ignore support plugin (hsz.mobi)
+/.idea/
+/gradle/
+/gradlew
+/gradlew.bat
+/run/
+.gradle/
+build/
+classes/
+run/
