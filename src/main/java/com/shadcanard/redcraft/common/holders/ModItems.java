@@ -20,13 +20,13 @@ public class ModItems {
     public static ItemGoldDust goldDust;
 
     @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Items.IRON_BOWL)
-    public static ItemIronBowl ironBowl;
+    private static ItemIronBowl ironBowl;
 
     @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Items.SCREEN)
-    public static ItemScreen screen;
+    private static ItemScreen screen;
 
     @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Items.CRAFTMOJI_TABLET)
-    public static ItemCraftmojiTablet craftmojiTablet;
+    private static ItemCraftmojiTablet craftmojiTablet;
     //endregion
 
     @SideOnly(Side.CLIENT)

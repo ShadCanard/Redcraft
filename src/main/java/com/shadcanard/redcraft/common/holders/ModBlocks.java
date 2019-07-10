@@ -6,7 +6,6 @@ import com.shadcanard.redcraft.common.blocks.generator.BlockGenerator;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.BlockSolarFurnace;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
-import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

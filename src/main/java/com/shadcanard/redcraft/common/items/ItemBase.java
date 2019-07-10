@@ -11,17 +11,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBase extends Item {
 
-    public ResourceLocation resourceLocation;
-    public String itemName;
+    private final ResourceLocation resourceLocation;
+    private final String itemName;
 
-    public ItemBase(String name){
+    ItemBase(String name){
         this.itemName = name;
         resourceLocation = new ResourceLocation(References.MOD_ID, name);
         setName();
         setCreativeTab(RedCraft.redcraftResourceCreativeTab);
     }
 
-    public void setName(){
+    private void setName(){
         setUnlocalizedName(References.MOD_ID + "." + itemName);
         setRegistryName(resourceLocation);
     }

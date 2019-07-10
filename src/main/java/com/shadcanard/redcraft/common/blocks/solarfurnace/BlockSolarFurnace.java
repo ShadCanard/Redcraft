@@ -1,7 +1,6 @@
 package com.shadcanard.redcraft.common.blocks.solarfurnace;
 
 import com.shadcanard.redcraft.common.RedCraft;
-import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
 import com.shadcanard.redcraft.common.blocks.machine.BlockMachineBase;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;

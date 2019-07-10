@@ -21,7 +21,7 @@ public abstract class BlockMachineBase extends BlockBase implements ITileEntityP
 
     private static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-    public BlockMachineBase(String blockName) {
+    protected BlockMachineBase(String blockName) {
         super(blockName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         setCreativeTab(RedCraft.redcraftMachineCreativeTab);

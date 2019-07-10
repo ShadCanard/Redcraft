@@ -18,7 +18,7 @@ public class Names {
         public static final String CRAFTMOJI_TABLET = "craftmoji_tablet";
     }
 
-    public class Entities{
+    private class Entities{
 
     }
 

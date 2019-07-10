@@ -13,8 +13,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -25,20 +23,20 @@ import javax.annotation.Nullable;
 public class TileRedFurnace extends TileEntity implements ITickable {
 
     //region variables
-    public static ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_RED_FURNACE);
-    public static final int INPUT_SLOT_SIZE = 4;
-    public static final int OUTPUT_SLOT_SIZE = 4;
-    public static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
-    public static final int MAX_POWER = 100000;
-    public static final int RF_PER_TICK = 20;
-    public static final int MAX_RECEIVE_PER_TICK = 1500;
+    public static final ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_RED_FURNACE);
+    private static final int INPUT_SLOT_SIZE = 4;
+    private static final int OUTPUT_SLOT_SIZE = 4;
+    static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
+    private static final int MAX_POWER = 100000;
+    private static final int RF_PER_TICK = 20;
+    private static final int MAX_RECEIVE_PER_TICK = 1500;
     private static final int MAX_PROGRESS = 40;
 
     private int progress = 0;
     private int clientProgress = -1;
-    private ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_POWER,MAX_RECEIVE_PER_TICK);
+    private final ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_POWER,MAX_RECEIVE_PER_TICK);
 
-    private ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
+    private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileRedFurnace.this.markDirty();
@@ -49,14 +47,14 @@ public class TileRedFurnace extends TileEntity implements ITickable {
             return !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty();
         }
     };
-    private ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
+    private final ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileRedFurnace.this.markDirty();
         }
     };
 
-    private CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
+    private final CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
 
     //endregion
 
@@ -64,21 +62,21 @@ public class TileRedFurnace extends TileEntity implements ITickable {
     public int getClientProgress() {
         return clientProgress;
     }
-    public void setClientProgress(int clientProgress) {
+    void setClientProgress(int clientProgress) {
         this.clientProgress = clientProgress;
     }
 
     public int getProgress() {
         return progress;
     }
-    public void setProgress(int progress) {
+    void setProgress(int progress) {
         this.progress = progress;
     }
 
-    public int getInputStackSize(){
+    int getInputStackSize(){
         return INPUT_SLOT_SIZE;
     }
-    public int getOutputStackSize(){
+    int getOutputStackSize(){
         return INPUT_SLOT_SIZE;
     }
 
@@ -98,6 +96,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         progress = compound.getInteger("progress");
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
@@ -107,12 +106,12 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         return compound;
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn){
+    boolean canInteractWith(EntityPlayer playerIn){
         return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D,0.5D,0.5D)) <= 64D;
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nullable Capability<?> capability, @Nullable EnumFacing facing) {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
         if(capability == CapabilityEnergy.ENERGY) return true;
         return super.hasCapability(capability, facing);
@@ -120,7 +119,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
 
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nullable Capability<T> capability, @Nullable EnumFacing facing) {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             if(facing == null) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(combinedStack);
             else if(facing == EnumFacing.DOWN) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputStack);
@@ -133,7 +132,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
     }
 
 
-    public boolean insertOutput(ItemStack output, boolean simulate){
+    private boolean insertOutput(ItemStack output, boolean simulate){
         for (int i = 0; i < OUTPUT_SLOT_SIZE; i++) {
             ItemStack remaining = outputStack.insertItem(i, output,simulate);
             if(remaining.isEmpty()) return true;
@@ -141,7 +140,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         return false;
     }
 
-    public void startSmelt(){
+    private void startSmelt(){
         for (int i = 0; i < INPUT_SLOT_SIZE; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputStack.getStackInSlot(i));
             if(!result.isEmpty()){
@@ -154,7 +153,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         }
     }
 
-    public void attemptSmelt(){
+    private void attemptSmelt(){
         for (int i = 0; i < INPUT_SLOT_SIZE; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputStack.getStackInSlot(i));
             if(!result.isEmpty()) {

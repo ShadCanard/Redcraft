@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockBase extends Block {
 
-    public String blockName;
+    private final String blockName;
     public ResourceLocation resourceLocation;
 
     public BlockBase(Material materialIn, String blockName) {
@@ -21,7 +21,7 @@ public class BlockBase extends Block {
         setName();
     }
 
-    public BlockBase(String blockName) {
+    protected BlockBase(String blockName) {
         super(Material.IRON);
         this.blockName = blockName;
         resourceLocation = new ResourceLocation(References.MOD_ID, blockName);
@@ -29,7 +29,7 @@ public class BlockBase extends Block {
         setHarvestLevel("pickaxe",1);
     }
 
-    public void setName(){
+    private void setName(){
         setRegistryName(resourceLocation);
         setUnlocalizedName(References.MOD_ID + "." + blockName);
     }

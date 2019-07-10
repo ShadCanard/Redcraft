@@ -1,6 +1,5 @@
 package com.shadcanard.redcraft.common.blocks.solarfurnace;
 
-import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,18 +18,19 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@SuppressWarnings("SameReturnValue")
 public class TileSolarFurnace extends TileEntity implements ITickable {
 
     //region Variables
-    public static final int INPUT_SLOT_SIZE = 4;
-    public static final int OUTPUT_SLOT_SIZE = 4;
+    private static final int INPUT_SLOT_SIZE = 4;
+    private static final int OUTPUT_SLOT_SIZE = 4;
     public static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
     private static final int MAX_PROGRESS = 800;
-    public static ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_SOLAR_FURNACE);
+    public static final ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_SOLAR_FURNACE);
 
     private int progress = 0;
     private int clientProgress = -1;
-    private ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
+    private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileSolarFurnace.this.markDirty();
@@ -41,7 +41,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
             return !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty();
         }
     };
-    private ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
+    private final ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileSolarFurnace.this.markDirty();
@@ -52,7 +52,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
             return false;
         }
     };
-    private CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
+    private final CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
 
     //endregion
 
@@ -94,6 +94,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
         progress = compound.getInteger("progress");
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
@@ -108,7 +109,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nullable Capability<?> capability, @Nullable EnumFacing facing) {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return true;
         }
@@ -117,7 +118,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
 
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nullable Capability<T> capability, @Nullable EnumFacing facing) {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             if(facing == null) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(combinedStack);
             else if(facing == EnumFacing.DOWN) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputStack);
@@ -127,15 +128,15 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     }
 
 
-    public boolean insertOutput(ItemStack output, boolean simulate){
+    private boolean insertOutput(ItemStack output, boolean simulate){
         for (int i = 0; i < OUTPUT_SLOT_SIZE; i++) {
             ItemStack remaining = outputStack.insertItem(i, output,simulate);
-            return remaining.isEmpty();
+            if(remaining.isEmpty()) return true;
         }
         return false;
     }
 
-    public void startSmelt(){
+    private void startSmelt(){
         for (int i = 0; i < INPUT_SLOT_SIZE; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputStack.getStackInSlot(i));
             if(!result.isEmpty()){
@@ -148,7 +149,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
         }
     }
 
-    public void attemptSmelt(){
+    private void attemptSmelt(){
         for (int i = 0; i < INPUT_SLOT_SIZE; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputStack.getStackInSlot(i));
             if(!result.isEmpty()) {

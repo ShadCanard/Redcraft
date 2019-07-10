@@ -1,6 +1,5 @@
 package com.shadcanard.redcraft.common.blocks.solarfurnace;
 
-import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -11,13 +10,16 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class ContainerSolarFurnace extends Container {
 
-    private TileSolarFurnace te;
-    public static final int SLOT_SIZE = 18;
-    public static final int PLAYER_INV_X = 8;
-    public static final int PLAYER_INV_Y = 84;
-    public static final int PROGRESS_ID = 0;
+    private final TileSolarFurnace te;
+    private static final int SLOT_SIZE = 18;
+    private static final int PLAYER_INV_X = 8;
+    private static final int PLAYER_INV_Y = 84;
+    private static final int PROGRESS_ID = 0;
 
     public ContainerSolarFurnace(IInventory playerInv, TileSolarFurnace te){
         this.te = te;
@@ -65,10 +67,11 @@ public class ContainerSolarFurnace extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nullable EntityPlayer playerIn) {
         return te.canInteractWith(playerIn);
     }
 
+    @Nonnull
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;

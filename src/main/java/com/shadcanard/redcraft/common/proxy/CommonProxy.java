@@ -8,15 +8,12 @@ import com.shadcanard.redcraft.common.blocks.generator.BlockGenerator;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.BlockSolarFurnace;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.TileSolarFurnace;
 import com.shadcanard.redcraft.common.gui.GuiHandler;
-import com.shadcanard.redcraft.common.helpers.Names;
-import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.helpers.SmeltingHelper;
 import com.shadcanard.redcraft.common.holders.ModBlocks;
 import com.shadcanard.redcraft.common.items.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -79,7 +76,7 @@ public class CommonProxy {
         //endregion
     }
 
-    public static void registerItemBlocks(RegistryEvent.Register<Item> event){
+    private static void registerItemBlocks(RegistryEvent.Register<Item> event){
         event.getRegistry().register(new ItemBlock(ModBlocks.blockRedIngot).setRegistryName(ModBlocks.blockRedIngot.resourceLocation));
         event.getRegistry().register(new ItemBlock(ModBlocks.blockGenerator).setRegistryName(ModBlocks.blockGenerator.resourceLocation));
         event.getRegistry().register(new ItemBlock(ModBlocks.blockRedFurnace).setRegistryName(ModBlocks.blockRedFurnace.resourceLocation));

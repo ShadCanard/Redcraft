@@ -13,6 +13,8 @@ public class ConsumerEnergyStorage extends EnergyStorage {
 
     public void consumePower(int energy){
         this.energy -= energy;
-        if(this.energy < 0) energy = 0;
+        if(this.energy < 0) {
+            this.energy = 0;
+        }
     }
 }

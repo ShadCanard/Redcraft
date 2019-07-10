@@ -19,21 +19,21 @@ public class RedCraft {
 
     //region Variables
     @SidedProxy(clientSide = References.PROXY_CLIENT, serverSide = References.PROXY_SERVER, modId = References.MOD_ID)
-    public static CommonProxy proxy;
+    private static CommonProxy proxy;
 
     @Mod.Instance
     public static RedCraft instance;
 
-    public static Logger logger;
+    private static Logger logger;
 
-    public static CreativeTabs redcraftMachineCreativeTab = new CreativeTabs(Names.Misc.MACHINE_CREATIVE_TAB) {
+    public static final CreativeTabs redcraftMachineCreativeTab = new CreativeTabs(Names.Misc.MACHINE_CREATIVE_TAB) {
         @Override
         public ItemStack getTabIconItem() {
             return new ItemStack(ModBlocks.blockGenerator);
         }
     };
 
-    public static CreativeTabs redcraftResourceCreativeTab = new CreativeTabs(Names.Misc.RESOURCES_CREATIVE_TAB) {
+    public static final CreativeTabs redcraftResourceCreativeTab = new CreativeTabs(Names.Misc.RESOURCES_CREATIVE_TAB) {
         @Override
         public ItemStack getTabIconItem() {
             return new ItemStack(ModItems.redIngot);

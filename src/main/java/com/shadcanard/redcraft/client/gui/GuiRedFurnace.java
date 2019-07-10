@@ -9,8 +9,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiRedFurnace extends GuiContainer {
 
-    public static final ResourceLocation background = new ResourceLocation(References.MOD_ID, "textures/gui/red_furnace.png");
-    public TileRedFurnace te;
+    private static final ResourceLocation background = new ResourceLocation(References.MOD_ID, "textures/gui/red_furnace.png");
+    private final TileRedFurnace te;
 
     public GuiRedFurnace(TileRedFurnace tileEntity, ContainerRedFurnace container, InventoryPlayer playerInv) {
         super(container);
@@ -22,7 +22,7 @@ public class GuiRedFurnace extends GuiContainer {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         if(te.getProgress() > 0){
-            int percentage = 100 - te.getClientProgress() * 100 / te.getMaxProgress();
+            int percentage = 100 - te.getClientProgress() * 100 / TileRedFurnace.getMaxProgress();
             drawString(mc.fontRenderer, "Progress : " + percentage + "%", guiLeft + 50, guiTop+30, 0xffffff);
         }
     }
