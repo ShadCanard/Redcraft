@@ -1,0 +1,15 @@
+### BLOCKS
+tile.redcraft.red_block.name=Red Block
+tile.redcraft.red_generator.name=Red Generator
+
+### ITEMS
+item.redcraft.red_ingot.name=Red Ingot
+item.redcraft.red_dust.name=Red Dust
+item.redcraft.gold_dust.name=Gold Dust
+item.redcraft.iron_bowl.name=Iron Bowl
+item.redcraft.screen.name=Screen
+
+
+### MISC
+itemGroup.redcraft_machines=RedCraft Machines
+itemGroup.redcraft_resources=RedCraft Resources

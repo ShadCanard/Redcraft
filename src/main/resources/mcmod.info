@@ -1,0 +1,16 @@
+[
+{
+  "modid": "redcraft",
+  "name": "RedCraft",
+  "description": "Unleash the Red Power !",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ShadCanard"],
+  "credits": "All of my patreons !",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

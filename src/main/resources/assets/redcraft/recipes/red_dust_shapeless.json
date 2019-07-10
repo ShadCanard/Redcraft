@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:redstone",
+      "data": 0
+    },
+    {
+      "item": "redcraft:gold_dust",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "redcraft:red_dust",
+    "count": 1
+  }
+}

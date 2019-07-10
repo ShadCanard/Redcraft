@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:flint",
+      "data": 0
+    },
+    {
+      "item": "redcraft:iron_bowl",
+      "data": 0
+    },
+    {
+      "item": "minecraft:gold_ingot",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "redcraft:gold_dust",
+    "count": 1
+  }
+}

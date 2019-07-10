@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "isi",
+    "ifi",
+    "iri"
+  ],
+  "key": {
+    "i": [
+      {
+        "item": "redcraft:red_ingot",
+        "data": 0
+      }
+    ],
+    "f": [
+      {
+        "item": "minecraft:furnace",
+        "data": 0
+      }
+    ],
+    "s": [
+      {
+        "item": "redcraft:screen",
+        "data": 0
+      }
+    ],
+    "r": [
+      {
+        "item": "minecraft:redstone",
+        "data": 0
+      }
+    ]
+  },
+  "result": {
+    "item": "redcraft:red_generator",
+    "count": 1
+  }
+}

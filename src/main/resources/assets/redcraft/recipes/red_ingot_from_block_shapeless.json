@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "red_ingot",
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "redcraft:red_block"
+    }
+  },
+  "result": {
+    "item": "redcraft:red_ingot",
+    "count": 9
+  }
+}

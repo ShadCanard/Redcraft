@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "psp",
+    "ifi",
+    "iii"
+  ],
+  "key": {
+    "i": [
+      {
+        "item": "redcraft:red_ingot",
+        "data": 0
+      }
+    ],
+    "f": [
+      {
+        "item": "minecraft:furnace",
+        "data": 0
+      }
+    ],
+    "s": [
+      {
+        "item": "redcraft:screen",
+        "data": 0
+      }
+    ],
+    "p": [
+      {
+        "item": "minecraft:daylight_detector",
+        "data": 0
+      }
+    ]
+  },
+  "result": {
+    "item": "redcraft:solar_furnace",
+    "count": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube",
+    "textures": {
+      "up": "redcraft:blocks/solarfurnace/top",
+      "north": "redcraft:blocks/solarfurnace/front_off",
+      "west": "redcraft:blocks/solarfurnace/side",
+      "south": "redcraft:blocks/solarfurnace/side",
+      "east": "redcraft:blocks/solarfurnace/side",
+      "down": "redcraft:blocks/solarfurnace/side"
+    }
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}],
+    "facing": {
+      "north": {},
+      "south": {"y": 180},
+      "west": {"y": 270},
+      "east": {"y": 90}
+    }
+  }
+}

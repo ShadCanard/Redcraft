@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " r ",
+    "rgr",
+    " r "
+  ],
+  "key": {
+    "r": [
+      {
+        "item": "minecraft:redstone",
+        "data": 0
+      }
+    ],
+    "g": [
+      {
+        "item": "minecraft:glass_pane",
+        "data": 0
+      }
+    ]
+  },
+  "result": {
+    "item": "redcraft:screen",
+    "count": 1
+  }
+}
