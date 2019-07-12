@@ -22,7 +22,7 @@ public class GuiRedFurnace extends GuiContainer {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         if(te.getProgress() > 0){
-            int percentage = 100 - te.getClientProgress() * 100 / TileRedFurnace.getMaxProgress();
+            int percentage = 100 - te.getProgress() * 100 / TileRedFurnace.getMaxProgress();
             drawString(mc.fontRenderer, "Progress : " + percentage + "%", guiLeft + 50, guiTop+30, 0xffffff);
         }
     }

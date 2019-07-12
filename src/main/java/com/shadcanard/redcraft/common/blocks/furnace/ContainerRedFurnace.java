@@ -105,12 +105,10 @@ public class ContainerRedFurnace extends Container {
 
     @Override
     public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        if(te.getProgress() != te.getClientProgress()){
-            te.setClientProgress(te.getProgress());
-            for(IContainerListener listener: listeners){
-                listener.sendWindowProperty(this,PROGRESS_ID,te.getProgress());
-            }
+    super.detectAndSendChanges();
+        te.setClientProgress(te.getProgress());
+        for(IContainerListener listener: listeners){
+            listener.sendWindowProperty(this,PROGRESS_ID,te.getProgress());
         }
     }
 

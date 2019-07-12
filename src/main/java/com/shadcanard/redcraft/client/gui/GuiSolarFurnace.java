@@ -1,5 +1,6 @@
 package com.shadcanard.redcraft.client.gui;
 
+import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.ContainerSolarFurnace;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.TileSolarFurnace;
 import com.shadcanard.redcraft.common.helpers.References;
@@ -22,7 +23,10 @@ public class GuiSolarFurnace extends GuiContainer {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         if(te.getProgress() > 0){
-            int percentage = 100 - te.getClientProgress() * 100 / TileSolarFurnace.getMaxProgress();
+            int percentage = 100 - te.getProgress() * 100 / TileSolarFurnace.getMaxProgress();
+            if(te.isWorking()) {
+                RedCraft.logger.info(percentage);
+            }
             drawString(mc.fontRenderer, "Progress : " + percentage + "%", guiLeft + 50, guiTop+30, 0xffffff);
         }
     }

@@ -2,6 +2,7 @@ package com.shadcanard.redcraft.common.blocks.solarfurnace;
 
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
+import com.shadcanard.redcraft.common.tools.ConsumerEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -11,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -26,8 +28,11 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     private static final int OUTPUT_SLOT_SIZE = 4;
     static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
     private static final int MAX_PROGRESS = 800;
+    private static final int RF_PER_TICK = 5;
+    private static final int MAX_ENERGY_STORED = 50000;
+    private static final int RF_GENERATED_PER_TICK = 5;
     public static final ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_SOLAR_FURNACE);
-
+    private boolean isWorking = false;
     private int progress = 0;
     private int clientProgress = -1;
     private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
@@ -53,6 +58,8 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
         }
     };
     private final CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
+
+    public ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_ENERGY_STORED,0);
 
     //endregion
 
@@ -113,6 +120,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return true;
         }
+        if(capability == CapabilityEnergy.ENERGY) return true;
         return super.hasCapability(capability, facing);
     }
 
@@ -123,6 +131,9 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
             if(facing == null) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(combinedStack);
             else if(facing == EnumFacing.DOWN) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputStack);
             else return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inputStack);
+        }
+        if(capability == CapabilityEnergy.ENERGY){
+            return CapabilityEnergy.ENERGY.cast(energyStorage);
         }
         return super.getCapability(capability, facing);
     }
@@ -160,14 +171,40 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
         }
     }
 
+    private boolean hasContent(){
+        for (int i = 0; i < INPUT_SLOT_SIZE; i++) {
+            if(inputStack.getStackInSlot(i) != ItemStack.EMPTY){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isWorking(){
+        return isWorking;
+    }
+
     @Override
     public void update() {
         if(!world.isRemote) {
-            if (world.canBlockSeeSky(pos.up()) && world.isDaytime()) {
+            if(!hasContent()){
+                isWorking = false;
+               progress = MAX_PROGRESS;
+            }else {
+                if (world.canBlockSeeSky(pos.up()) && world.isDaytime())
+                    energyStorage.setEnergy(energyStorage.getEnergyStored() + RF_GENERATED_PER_TICK);
+                if (energyStorage.getEnergyStored() < RF_PER_TICK) {
+                    isWorking = false;
+                    return;
+                }
+                isWorking = true;
                 if (progress > 0) {
                     progress--;
+                    energyStorage.consumePower(RF_PER_TICK);
+                    isWorking = true;
                     if (progress <= 0) {
                         attemptSmelt();
+                        isWorking = false;
                     }
                     markDirty();
                 } else {
