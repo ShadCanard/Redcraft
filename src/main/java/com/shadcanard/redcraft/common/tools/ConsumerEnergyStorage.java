@@ -17,4 +17,8 @@ public class ConsumerEnergyStorage extends EnergyStorage {
             this.energy = 0;
         }
     }
+
+    public int getCapacity(){
+        return this.capacity;
+    }
 }

@@ -35,6 +35,10 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     private boolean isWorking = false;
     private int progress = 0;
     private int clientProgress = -1;
+
+    //endregion
+
+    //region Handlers
     private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {

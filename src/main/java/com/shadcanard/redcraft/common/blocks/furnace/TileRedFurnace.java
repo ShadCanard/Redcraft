@@ -34,8 +34,11 @@ public class TileRedFurnace extends TileEntity implements ITickable {
 
     private int progress = 0;
     private int clientProgress = -1;
-    private final ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_POWER,MAX_RECEIVE_PER_TICK);
 
+    private int clientEnergy = -1;
+
+    //region Handlers
+    private final ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_POWER,MAX_RECEIVE_PER_TICK);
     private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
@@ -52,9 +55,14 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         protected void onContentsChanged(int slot) {
             TileRedFurnace.this.markDirty();
         }
-    };
 
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return false;
+        }
+    };
     private final CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
+    //endregion
 
     //endregion
 
@@ -83,6 +91,18 @@ public class TileRedFurnace extends TileEntity implements ITickable {
 
     public static int getMaxProgress() {
         return MAX_PROGRESS;
+    }
+
+    public int getClientEnergy() {
+        return clientEnergy;
+    }
+
+    public void setClientEnergy(int clientEnergy) {
+        this.clientEnergy = clientEnergy;
+    }
+
+    public int getEnergy(){
+        return energyStorage.getEnergyStored();
     }
 
     //endregion
@@ -147,6 +167,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
                 if(insertOutput(result.copy(),true)){
                     progress = MAX_PROGRESS;
                     markDirty();
+                    return;
                 }
                 break;
             }
@@ -179,6 +200,10 @@ public class TileRedFurnace extends TileEntity implements ITickable {
                 startSmelt();
             }
         }
+    }
+
+    public int getMaxEnergy() {
+        return energyStorage.getMaxEnergyStored();
     }
 
     //endregion

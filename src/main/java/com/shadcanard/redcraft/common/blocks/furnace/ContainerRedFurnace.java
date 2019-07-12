@@ -1,6 +1,10 @@
 package com.shadcanard.redcraft.common.blocks.furnace;
 
+import com.shadcanard.redcraft.common.network.Messages;
+import com.shadcanard.redcraft.common.network.PacketSyncPower;
+import com.shadcanard.redcraft.common.tools.IEnergyContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
@@ -13,7 +17,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ContainerRedFurnace extends Container {
+public class ContainerRedFurnace extends Container implements IEnergyContainer {
 
     public ContainerRedFurnace(IInventory playerInv, TileRedFurnace te){
         this.te = te;
@@ -106,9 +110,20 @@ public class ContainerRedFurnace extends Container {
     @Override
     public void detectAndSendChanges() {
     super.detectAndSendChanges();
+    if(te.getProgress() != te.getClientProgress()){
         te.setClientProgress(te.getProgress());
         for(IContainerListener listener: listeners){
             listener.sendWindowProperty(this,PROGRESS_ID,te.getProgress());
+            }
+        }
+        if(te.getEnergy() != te.getClientEnergy()){
+            te.setClientEnergy(te.getEnergy());
+            for (IContainerListener listener : listeners){
+                if(listener instanceof EntityPlayerMP){
+                    EntityPlayerMP player = (EntityPlayerMP) listener;
+                    Messages.INSTANCE.sendTo(new PacketSyncPower(te.getEnergy()),player);
+                }
+            }
         }
     }
 
@@ -116,8 +131,13 @@ public class ContainerRedFurnace extends Container {
     public void updateProgressBar(int id, int data) {
         super.updateProgressBar(id, data);
         if(id == PROGRESS_ID){
-            te.setProgress(data);
+            te.setClientProgress(data);
         }
+    }
+
+    @Override
+    public void syncPower(int energy) {
+        te.setClientEnergy(energy);
     }
 
     //endregion

@@ -19,7 +19,7 @@ public class RedCraft {
 
     //region Variables
     @SidedProxy(clientSide = References.PROXY_CLIENT, serverSide = References.PROXY_SERVER, modId = References.MOD_ID)
-    private static CommonProxy proxy;
+    public static CommonProxy proxy;
 
     @Mod.Instance
     public static RedCraft instance;

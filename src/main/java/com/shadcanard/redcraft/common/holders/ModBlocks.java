@@ -1,8 +1,9 @@
 package com.shadcanard.redcraft.common.holders;
 
 import com.shadcanard.redcraft.common.RedCraft;
-import com.shadcanard.redcraft.common.blocks.BlockRedIngot;
+import com.shadcanard.redcraft.common.blocks.basic.BlockRedIngot;
 import com.shadcanard.redcraft.common.blocks.furnace.BlockRedFurnace;
+import com.shadcanard.redcraft.common.blocks.generator.BlockCreativeGenerator;
 import com.shadcanard.redcraft.common.blocks.generator.BlockGenerator;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.BlockSolarFurnace;
 import com.shadcanard.redcraft.common.helpers.Names;
@@ -25,6 +26,10 @@ public class ModBlocks {
 
     @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Blocks.BLOCK_SOLAR_FURNACE)
     public static BlockSolarFurnace blockSolarFurnace;
+
+    @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Blocks.BLOCK_RED_GENERATOR + "_creative")
+    public static BlockCreativeGenerator blockCreativeGenerator;
+
     //endregion
 
     @SideOnly(Side.CLIENT)
@@ -34,5 +39,6 @@ public class ModBlocks {
         blockGenerator.initModel();
         blockRedFurnace.initModel();
         blockSolarFurnace.initModel();
+        blockCreativeGenerator.initModel();
     }
 }

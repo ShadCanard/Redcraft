@@ -22,8 +22,8 @@ public class GuiSolarFurnace extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        if(te.getProgress() > 0){
-            int percentage = 100 - te.getProgress() * 100 / TileSolarFurnace.getMaxProgress();
+        if(te.getClientProgress() > 0){
+            int percentage = 100 - te.getClientProgress() * 100 / TileSolarFurnace.getMaxProgress();
             if(te.isWorking()) {
                 RedCraft.logger.info(percentage);
             }
