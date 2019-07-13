@@ -1,12 +1,16 @@
 package com.shadcanard.redcraft.common.blocks.furnace;
 
+import com.shadcanard.redcraft.common.blocks.machine.MachineState;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.tools.ConsumerEnergyStorage;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -26,12 +30,12 @@ public class TileRedFurnace extends TileEntity implements ITickable {
     public static final ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_RED_FURNACE);
     private static final int INPUT_SLOT_SIZE = 4;
     private static final int OUTPUT_SLOT_SIZE = 4;
-    static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
+    public static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
     private static final int MAX_POWER = 100000;
     private static final int RF_PER_TICK = 20;
     private static final int MAX_RECEIVE_PER_TICK = 1500;
     private static final int MAX_PROGRESS = 40;
-
+    private MachineState STATE = MachineState.OFF;
     private int progress = 0;
     private int clientProgress = -1;
 
@@ -39,7 +43,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
 
     //region Handlers
     private final ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_POWER,MAX_RECEIVE_PER_TICK);
-    private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
+    public final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileRedFurnace.this.markDirty();
@@ -50,7 +54,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
             return !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty();
         }
     };
-    private final ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
+    public final ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileRedFurnace.this.markDirty();
@@ -61,12 +65,17 @@ public class TileRedFurnace extends TileEntity implements ITickable {
             return false;
         }
     };
-    private final CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
+    public final CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
     //endregion
 
     //endregion
 
     //region Getters and Setters
+
+    public CombinedInvWrapper getCombinedStack(){
+        return combinedStack;
+    }
+
     public int getClientProgress() {
         return clientProgress;
     }
@@ -105,6 +114,53 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         return energyStorage.getEnergyStored();
     }
 
+    public MachineState getState() {
+        return STATE;
+    }
+
+    /**
+     * Sets the current state of a block. Detects if the block's state is different of the current block state. If so, updates the block Client Side
+     * @param STATE
+     */
+    public void setState(MachineState STATE) {
+        if(this.STATE != STATE){
+            this.STATE = STATE;
+            markDirty();
+            IBlockState blockState = world.getBlockState(pos);
+            getWorld().notifyBlockUpdate(pos,blockState,blockState,3);
+        }
+        this.STATE = STATE;
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbtTagCompound = super.getUpdateTag();
+        if(STATE == null) STATE = MachineState.OFF;
+        nbtTagCompound.setInteger("state", STATE.ordinal());
+        return nbtTagCompound;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(pos,1,getUpdateTag());
+    }
+
+    /**
+     * Will be called server side each time an update is needed
+     * @param net
+     * @param pkt
+     */
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        int stateIndex = pkt.getNbtCompound().getInteger("state");
+        if(STATE == null) STATE = MachineState.OFF;
+        if(world.isRemote && stateIndex != STATE.ordinal()){
+            STATE = MachineState.VALUES[stateIndex];
+            world.markBlockRangeForRenderUpdate(pos,pos);
+        }
+    }
+
     //endregion
 
     //region Methods
@@ -113,6 +169,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         super.readFromNBT(compound);
         if(compound.hasKey("itemsIn")) inputStack.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
         if(compound.hasKey("itemsOut")) outputStack.deserializeNBT((NBTTagCompound) compound.getTag("itemsOut"));
+        energyStorage.setEnergy(compound.getInteger("energy"));
         progress = compound.getInteger("progress");
     }
 
@@ -123,6 +180,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         compound.setTag("itemsIn", inputStack.serializeNBT());
         compound.setTag("itemsOut", outputStack.serializeNBT());
         compound.setInteger("progress",progress);
+        compound.setInteger("energy",energyStorage.getEnergyStored());
         return compound;
     }
 
@@ -150,7 +208,6 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         }
         return super.getCapability(capability, facing);
     }
-
 
     private boolean insertOutput(ItemStack output, boolean simulate){
         for (int i = 0; i < OUTPUT_SLOT_SIZE; i++) {
@@ -190,6 +247,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
         if(!world.isRemote){
             if(energyStorage.getEnergyStored() < RF_PER_TICK) return;
             if(progress > 0) {
+                setState(MachineState.WORKING);
                 progress--;
                 energyStorage.consumePower(RF_PER_TICK);
                 if (progress <= 0) {
@@ -197,6 +255,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
                 }
                 markDirty();
             } else {
+                setState(MachineState.OFF);
                 startSmelt();
             }
         }
