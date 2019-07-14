@@ -16,6 +16,6 @@ public class Messages {
         //Server side
 
         //Client side
-        INSTANCE.registerMessage(PacketSyncPower.Handler.class, PacketSyncPower.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketSyncMachine.Handler.class, PacketSyncMachine.class, nextID(), Side.CLIENT);
     }
 }

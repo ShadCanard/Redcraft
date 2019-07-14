@@ -24,7 +24,7 @@ public class ItemBase extends Item {
     }
 
     private void setName(){
-        setUnlocalizedName(References.MOD_ID + "." + itemName);
+        setTranslationKey(References.MOD_ID + "." + itemName);
         setRegistryName(resourceLocation);
     }
 

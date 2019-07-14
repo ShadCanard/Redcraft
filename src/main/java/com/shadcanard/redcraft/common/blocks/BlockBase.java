@@ -33,7 +33,7 @@ public class BlockBase extends Block {
 
     private void setName(){
         setRegistryName(resourceLocation);
-        setUnlocalizedName(References.MOD_ID + "." + blockName);
+        setTranslationKey(References.MOD_ID + "." + blockName);
     }
 
     @SideOnly(Side.CLIENT)

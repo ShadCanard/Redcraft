@@ -3,6 +3,7 @@
   "defaults": {
     "model": "orientable",
     "textures": {
+      "particle": "redcraft:blocks/furnace/top",
       "top": "redcraft:blocks/furnace/top",
       "front": "redcraft:blocks/furnace/front_off",
       "side": "redcraft:blocks/furnace/side"

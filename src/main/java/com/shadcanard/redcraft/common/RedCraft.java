@@ -28,14 +28,14 @@ public class RedCraft {
 
     public static final CreativeTabs redcraftMachineCreativeTab = new CreativeTabs(Names.Misc.MACHINE_CREATIVE_TAB) {
         @Override
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             return new ItemStack(ModBlocks.blockGenerator);
         }
     };
 
     public static final CreativeTabs redcraftResourceCreativeTab = new CreativeTabs(Names.Misc.RESOURCES_CREATIVE_TAB) {
         @Override
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             return new ItemStack(ModItems.redIngot);
         }
     };

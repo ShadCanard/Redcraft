@@ -63,8 +63,8 @@ public class GuiRedFurnace extends GuiContainer {
     private void drawProgressBar(int progress, int maxProgress){
         drawRect(progressBarMinX, progressBarMinY, progressBarMaxX, progressBarMaxY, 0xff777777);
         if(te.getClientProgress() > 0) {
-            int percentage = 100 - progress * 100 / maxProgress;
-            for (int i = 0; i < percentage; i++) {
+            int percentage = te.getClientProgress();
+            for (int i = 0; i < (percentage == 100 ? 0 : percentage); i++) {
                 drawVerticalLine((int) (progressBarMinX + 1 + (i * 0.725)), progressBarMinY, (progressBarMaxY - 1), 0xff40cf40);
             }
         }
@@ -80,7 +80,7 @@ public class GuiRedFurnace extends GuiContainer {
             drawHoveringText(Collections.singletonList(te.getClientEnergy() + " / " + te.getMaxEnergy() + " FE"), mouseX, mouseY, fontRenderer);
         }
         if(mouseX > progressBarMinX && mouseX < progressBarMaxX && mouseY > progressBarMinY && mouseY < progressBarMaxY){
-            int percentage = 100 - te.getClientProgress() * 100 / te.getMaxProgress();
+            int percentage = te.getClientProgress();
             drawHoveringText(Collections.singletonList("Progress : " + (percentage == 100 ? "0" : percentage) + "%"), mouseX, mouseY, fontRenderer);
         }
     }

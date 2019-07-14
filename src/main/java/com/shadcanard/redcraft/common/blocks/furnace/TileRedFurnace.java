@@ -1,5 +1,6 @@
 package com.shadcanard.redcraft.common.blocks.furnace;
 
+import com.shadcanard.redcraft.common.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.blocks.machine.MachineState;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
@@ -31,10 +32,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
     private static final int INPUT_SLOT_SIZE = 4;
     private static final int OUTPUT_SLOT_SIZE = 4;
     public static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
-    private static final int MAX_POWER = 100000;
-    private static final int RF_PER_TICK = 20;
-    private static final int MAX_RECEIVE_PER_TICK = 1500;
-    private static final int MAX_PROGRESS = 40;
+
     private MachineState STATE = MachineState.OFF;
     private int progress = 0;
     private int clientProgress = -1;
@@ -42,7 +40,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
     private int clientEnergy = -1;
 
     //region Handlers
-    private final ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_POWER,MAX_RECEIVE_PER_TICK);
+    private final ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(BasicMachinesConfig.basicMachineMaxPower, BasicMachinesConfig.basicMachineMaxReceive);
     public final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
@@ -99,7 +97,7 @@ public class TileRedFurnace extends TileEntity implements ITickable {
 
 
     public static int getMaxProgress() {
-        return MAX_PROGRESS;
+        return BasicMachinesConfig.basicMachineMaxProgress;
     }
 
     public int getClientEnergy() {
@@ -222,13 +220,14 @@ public class TileRedFurnace extends TileEntity implements ITickable {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputStack.getStackInSlot(i));
             if(!result.isEmpty()){
                 if(insertOutput(result.copy(),true)){
-                    progress = MAX_PROGRESS;
+                    setState(MachineState.WORKING);
+                    progress = BasicMachinesConfig.basicMachineMaxProgress;
                     markDirty();
                     return;
                 }
-                break;
             }
         }
+        setState(MachineState.OFF);
     }
 
     private void attemptSmelt(){
@@ -245,17 +244,16 @@ public class TileRedFurnace extends TileEntity implements ITickable {
     @Override
     public void update() {
         if(!world.isRemote){
-            if(energyStorage.getEnergyStored() < RF_PER_TICK) return;
+            if(energyStorage.getEnergyStored() < BasicMachinesConfig.basicMachineRfPerTick) return;
             if(progress > 0) {
                 setState(MachineState.WORKING);
                 progress--;
-                energyStorage.consumePower(RF_PER_TICK);
+                energyStorage.consumePower(BasicMachinesConfig.basicMachineRfPerTick);
                 if (progress <= 0) {
                     attemptSmelt();
                 }
                 markDirty();
             } else {
-                setState(MachineState.OFF);
                 startSmelt();
             }
         }
