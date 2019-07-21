@@ -1,5 +1,6 @@
 package com.shadcanard.redcraft.common.items;
 
+import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.generator.TileGenerator;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,8 +9,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -22,10 +26,13 @@ import javax.annotation.Nullable;
 
 public class ContainerDebug extends Container {
 
-    public ContainerDebug(IInventory playerInv) {
+    public EntityPlayer player;
+
+    public ContainerDebug(EntityPlayer playerIn) {
         super();
+        player = playerIn;
         addOwnSlots();
-        addPlayerSlots(playerInv);
+        addPlayerSlots(playerIn.inventory);
     }
 
     private static final int PLAYER_INV_X = 8;
@@ -34,6 +41,25 @@ public class ContainerDebug extends Container {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
             return true;
+        }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            ItemStack stack = this.getStackInSlot(slot);
+            if(stack != ItemStack.EMPTY) {
+                player.sendMessage(new TextComponentString("Debug Infos sent on console. Please read your logs."));
+                RedCraft.logger.info("Name : " + stack.getDisplayName());
+                RedCraft.logger.info("Size : " + stack.getCount());
+                RedCraft.logger.info("Is smeltable : " + !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty());
+                if(!FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty()){
+                    RedCraft.logger.info("Smelting Result : " + FurnaceRecipes.instance().getSmeltingResult(stack).getDisplayName());
+                }
+                RedCraft.logger.info("Is Fuel : " + (TileEntityFurnace.getItemBurnTime(stack) > 0));
+                if((TileEntityFurnace.getItemBurnTime(stack) > 0)) {
+                    RedCraft.logger.info("Fuel time : " + TileEntityFurnace.getItemBurnTime(stack));
+                }
+            }
+            super.onContentsChanged(slot);
         }
     };
 

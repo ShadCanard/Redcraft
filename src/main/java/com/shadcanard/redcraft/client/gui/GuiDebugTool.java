@@ -1,6 +1,7 @@
 package com.shadcanard.redcraft.client.gui;
 
 import com.shadcanard.redcraft.common.RedCraft;
+import com.shadcanard.redcraft.common.helpers.GuiHelper;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.items.ContainerDebug;
 import net.minecraft.client.Minecraft;
@@ -36,6 +37,8 @@ public class GuiDebugTool extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        int stringWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth("Debug Tool");
+        drawCenteredString(Minecraft.getMinecraft().fontRenderer,"Debug Tool", guiLeft + ((guiLeft) / 2), guiTop + 10, GuiHelper.BACKGROUND_BAR_COLOR);
     }
 
     @Override
@@ -46,22 +49,7 @@ public class GuiDebugTool extends GuiContainer {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        if(button.id == 0){
-            ItemStack stack = container.inputStack.getStackInSlot(0);
-            player.sendMessage(new TextComponentString("Debug Infos sent on console. Please read your logs."));
-            RedCraft.logger.info("Name : " + stack.getDisplayName());
-            RedCraft.logger.info("Size : " + stack.getCount());
-            RedCraft.logger.info("Is burnable : " + !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty());
-            RedCraft.logger.info("Is Fuel : " + (net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack) >= 0));
-            RedCraft.logger.info("Fuel time : " + net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack));
-        }
-        super.actionPerformed(button);
-    }
-
-    @Override
     public void initGui() {
-        addButton(new GuiButton(0,guiLeft + 50, guiTop + 50, 100,20, "Debug"));
         super.initGui();
     }
 

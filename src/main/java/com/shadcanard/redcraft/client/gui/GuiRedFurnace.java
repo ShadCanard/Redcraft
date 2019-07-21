@@ -2,6 +2,7 @@ package com.shadcanard.redcraft.client.gui;
 
 import com.shadcanard.redcraft.common.blocks.furnace.ContainerRedFurnace;
 import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
+import com.shadcanard.redcraft.common.helpers.GuiHelper;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -49,23 +50,29 @@ public class GuiRedFurnace extends GuiContainer {
         progressBarMaxY = guiTop + 47;
 
         drawEnergyBar(te.getClientEnergy(), te.getMaxEnergy());
-        drawProgressBar(te.getClientProgress(), te.getMaxProgress());
+        drawProgressBar(te.getClientProgress());
     }
 
     private void drawEnergyBar(int energy, int maxEnergy){
-        drawRect(energyBarMinX,energyBarMinY,energyBarMaxX,energyBarMaxY, 0xff777777);
+        drawRect(energyBarMinX,energyBarMinY,energyBarMaxX,energyBarMaxY, GuiHelper.BACKGROUND_BAR_COLOR);
         int percentage = energy * 100 / maxEnergy;
-        for (int i = 0; i < percentage; i++) {
-            drawVerticalLine((int) (energyBarMinX + 1 + (i*0.725)), energyBarMinY, (energyBarMaxY - 1),0xffdf0000);
+        int barSize = GuiHelper.GetBarEndX(progressBarMinX,percentage,progressBarMaxX);
+        if(percentage > 0) {
+            for (int y = energyBarMinY + 1; y < energyBarMaxY - 1; y++) {
+                drawHorizontalLine(energyBarMinX + 1, energyBarMinX + 1 + barSize, y, GuiHelper.ENERGY_BAR_COLOR);
+            }
         }
     }
 
-    private void drawProgressBar(int progress, int maxProgress){
-        drawRect(progressBarMinX, progressBarMinY, progressBarMaxX, progressBarMaxY, 0xff777777);
+    private void drawProgressBar(int progress){
+        drawRect(progressBarMinX, progressBarMinY, progressBarMaxX, progressBarMaxY, GuiHelper.BACKGROUND_BAR_COLOR);
         if(te.getClientProgress() > 0) {
-            int percentage = te.getClientProgress();
-            for (int i = 0; i < (percentage == 100 ? 0 : percentage); i++) {
-                drawVerticalLine((int) (progressBarMinX + 1 + (i * 0.725)), progressBarMinY, (progressBarMaxY - 1), 0xff40cf40);
+            int percentage = progress;
+            int barSize = GuiHelper.GetBarEndX(progressBarMinX,percentage,progressBarMaxX);
+            if(percentage > 0 && percentage != 100) {
+                for (int y = progressBarMinY + 1; y < progressBarMaxY - 1; y++) {
+                    drawHorizontalLine(progressBarMinX + 1, progressBarMinX + barSize - 1, y, GuiHelper.PROGRESS_BAR_COLOR);
+                }
             }
         }
     }

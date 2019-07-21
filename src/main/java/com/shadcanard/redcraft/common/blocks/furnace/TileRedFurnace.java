@@ -227,7 +227,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
                     setState(MachineState.WORKING);
                     progress = BasicMachinesConfig.basicMachineMaxProgress;
                     markDirty();
-                    return;
+                    break;
                 }
             }
         }
@@ -248,11 +248,23 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
     @Override
     public void update() {
         if(!world.isRemote){
+            boolean canProcess = false;
+            for (int i = 0; i < getInputStackSize(); i++) {
+                if(!inputStack.getStackInSlot(i).isEmpty()) canProcess = true;
+            }
+
+            if(!canProcess) setProgress(0);
             if(energyStorage.getEnergyStored() < BasicMachinesConfig.basicMachineRfPerTick) return;
             if(progress > 0) {
                 setState(MachineState.WORKING);
-                progress--;
-                energyStorage.consumePower(BasicMachinesConfig.basicMachineRfPerTick);
+                int countProcessing = 0;
+                for (int i = 0; i < getInputStackSize(); i++) {
+                    if(!inputStack.getStackInSlot(i).isEmpty()) countProcessing++;
+                }
+                if(energyStorage.getEnergyStored() > BasicMachinesConfig.basicMachineRfPerTick * countProcessing){
+                    progress--;
+                    energyStorage.consumePower(BasicMachinesConfig.basicMachineRfPerTick * countProcessing);
+                }
                 if (progress <= 0) {
                     attemptSmelt();
                 }

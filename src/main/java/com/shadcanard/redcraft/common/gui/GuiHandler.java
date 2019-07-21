@@ -59,7 +59,7 @@ public class GuiHandler implements IGuiHandler {
         }
         /** Item GUIs (By ID) */
         if(ID == References.GUI_DEBUG_TOOL){
-            return new GuiDebugTool(new ContainerDebug(player.inventory),player.inventory);
+            return new GuiDebugTool(new ContainerDebug(player),player.inventory);
         }
         return null;
     }
