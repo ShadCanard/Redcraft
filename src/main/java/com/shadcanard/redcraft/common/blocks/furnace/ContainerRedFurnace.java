@@ -1,7 +1,7 @@
 package com.shadcanard.redcraft.common.blocks.furnace;
 
 import com.shadcanard.redcraft.common.BasicMachinesConfig;
-import com.shadcanard.redcraft.common.RedCraft;
+import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.network.Messages;
 import com.shadcanard.redcraft.common.network.PacketSyncMachine;
 import com.shadcanard.redcraft.common.tools.IMachineContainer;
@@ -29,7 +29,6 @@ public class ContainerRedFurnace extends Container implements IMachineContainer 
     }
 
     //region Variables
-    private static final int SLOT_SIZE = 18;
     private static final int PLAYER_INV_X = 8;
     private static final int PLAYER_INV_Y = 84;
     private static final int PROGRESS_ID = 0;
@@ -47,13 +46,13 @@ public class ContainerRedFurnace extends Container implements IMachineContainer 
         // Add our own slots
         for (int i = 0; i < te.getInputStackSize() ; i++) {
             addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
-            x += SLOT_SIZE;
+            x += References.SLOT_SIZE;
         }
         y = 49;
         x = 53;
         for (int i = te.getInputStackSize(); i < te.getInputStackSize() + te.getOutputStackSize(); i++){
             addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
-            x += SLOT_SIZE;
+            x += References.SLOT_SIZE;
         }
     }
 
@@ -63,15 +62,15 @@ public class ContainerRedFurnace extends Container implements IMachineContainer 
         int x, y;
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                x = (col * SLOT_SIZE) + PLAYER_INV_X;
-                y = (row * SLOT_SIZE) + PLAYER_INV_Y;
+                x = (col * References.SLOT_SIZE) + PLAYER_INV_X;
+                y = (row * References.SLOT_SIZE) + PLAYER_INV_Y;
                 this.addSlotToContainer(new Slot(playerInv,col + row * 9 + 10, x, y));
             }
         }
 
         //Slots for the Hotbar
         for (int col = 0; col < 9; ++col) {
-            x = (col * SLOT_SIZE) + PLAYER_INV_X;
+            x = (col * References.SLOT_SIZE) + PLAYER_INV_X;
             y = 58 + PLAYER_INV_Y;
             this.addSlotToContainer(new Slot(playerInv,col,x,y));
         }

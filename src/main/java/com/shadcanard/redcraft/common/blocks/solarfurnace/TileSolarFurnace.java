@@ -2,7 +2,7 @@ package com.shadcanard.redcraft.common.blocks.solarfurnace;
 
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
-import com.shadcanard.redcraft.common.tools.ConsumerEnergyStorage;
+import com.shadcanard.redcraft.common.tools.RedcraftEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -63,7 +63,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     };
     private final CombinedInvWrapper combinedStack = new CombinedInvWrapper(inputStack, outputStack);
 
-    public ConsumerEnergyStorage energyStorage = new ConsumerEnergyStorage(MAX_ENERGY_STORED,0);
+    public RedcraftEnergyStorage energyStorage = new RedcraftEnergyStorage(MAX_ENERGY_STORED,0);
 
     //endregion
 

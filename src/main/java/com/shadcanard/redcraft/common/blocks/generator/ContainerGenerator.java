@@ -1,7 +1,11 @@
-package com.shadcanard.redcraft.common.blocks.solarfurnace;
+package com.shadcanard.redcraft.common.blocks.generator;
 
+import com.shadcanard.redcraft.common.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.References;
+import com.shadcanard.redcraft.common.network.Messages;
+import com.shadcanard.redcraft.common.network.PacketSyncMachine;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
@@ -14,33 +18,32 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ContainerSolarFurnace extends Container {
+public class ContainerGenerator extends Container {
 
-    private final TileSolarFurnace te;
-    private static final int PLAYER_INV_X = 8;
-    private static final int PLAYER_INV_Y = 84;
-    private static final int PROGRESS_ID = 0;
-
-    public ContainerSolarFurnace(IInventory playerInv, TileSolarFurnace te){
+    public ContainerGenerator(IInventory playerInv, TileGenerator te){
         this.te = te;
 
         addOwnSlots();
         addPlayerSlots(playerInv);
     }
 
+    //region Variables
+    private static final int PLAYER_INV_X = 8;
+    private static final int PLAYER_INV_Y = 84;
+    private static final int PROGRESS_ID = 0;
+
+    private final TileGenerator te;
+
+    //endregion
+
+    //region Methods
     private void addOwnSlots() {
         IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 53;
-        int y = 7;
+        int x = 80;
+        int y = 35;
 
         // Add our own slots
         for (int i = 0; i < te.getInputStackSize() ; i++) {
-            addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
-            x += References.SLOT_SIZE;
-        }
-        y = 49;
-        x = 53;
-        for (int i = te.getInputStackSize(); i < te.getInputStackSize() + te.getOutputStackSize(); i++){
             addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
             x += References.SLOT_SIZE;
         }
@@ -81,11 +84,11 @@ public class ContainerSolarFurnace extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < TileSolarFurnace.SLOT_SIZE) {
-                if (!this.mergeItemStack(itemstack1, TileSolarFurnace.SLOT_SIZE, this.inventorySlots.size(), true)) {
+            if (index < TileGenerator.SLOT_SIZE) {
+                if (!this.mergeItemStack(itemstack1, TileGenerator.SLOT_SIZE, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, TileSolarFurnace.SLOT_SIZE, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, TileGenerator.SLOT_SIZE, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -101,18 +104,24 @@ public class ContainerSolarFurnace extends Container {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        te.setClientProgress(te.getProgress());
-        for(IContainerListener listener: listeners){
-            listener.sendWindowProperty(this,PROGRESS_ID,te.getProgress());
+        if(te.getProgress() != te.getClientProgress() || te.getEnergy() != te.getClientEnergy()){
+            te.setClientEnergy(te.getEnergy());
+            te.setClientProgress(te.getProgress());
+            for (IContainerListener listener : listeners){
+                if(listener instanceof EntityPlayerMP){
+                    EntityPlayerMP player = (EntityPlayerMP) listener;
+                    int percentage = 100 - (te.getProgress() * 100 / BasicMachinesConfig.basicMachineMaxProgress);
+                    Messages.INSTANCE.sendTo(new PacketSyncMachine(te.getEnergy(), percentage),player);
+                }
+            }
         }
     }
 
-
-    @Override
-    public void updateProgressBar(int id, int data) {
-        super.updateProgressBar(id, data);
-        if(id == PROGRESS_ID){
-            te.setProgress(data);
-        }
+    public void sync(int energy, int progress) {
+        te.setClientEnergy(energy);
+        te.setClientProgress(progress);
     }
+
+    //endregion
+
 }

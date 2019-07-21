@@ -5,8 +5,8 @@ import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.basic.BlockRedIngot;
 import com.shadcanard.redcraft.common.blocks.furnace.BlockRedFurnace;
 import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
-import com.shadcanard.redcraft.common.blocks.generator.BlockCreativeGenerator;
 import com.shadcanard.redcraft.common.blocks.generator.BlockGenerator;
+import com.shadcanard.redcraft.common.blocks.generator.TileGenerator;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.BlockSolarFurnace;
 import com.shadcanard.redcraft.common.blocks.solarfurnace.TileSolarFurnace;
 import com.shadcanard.redcraft.common.gui.GuiHandler;
@@ -19,7 +19,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -64,7 +63,6 @@ public class CommonProxy {
         event.getRegistry().register(new BlockGenerator());
         event.getRegistry().register(new BlockRedFurnace());
         event.getRegistry().register(new BlockSolarFurnace());
-        event.getRegistry().register(new BlockCreativeGenerator());
         //endregion
 
         //region Tile Entities
@@ -76,6 +74,7 @@ public class CommonProxy {
         RedCraft.logger.info("Registering Tile Entities");
         GameRegistry.registerTileEntity(TileRedFurnace.class, TileRedFurnace.resourceLocation);
         GameRegistry.registerTileEntity(TileSolarFurnace.class, TileSolarFurnace.resourceLocation);
+        GameRegistry.registerTileEntity(TileGenerator.class,TileGenerator.resourceLocation);
     }
 
     @SubscribeEvent
@@ -92,6 +91,7 @@ public class CommonProxy {
         event.getRegistry().register(new ItemIronBowl());
         event.getRegistry().register(new ItemScreen());
         event.getRegistry().register(new ItemCraftmojiTablet());
+        event.getRegistry().register(new ItemDebug());
         //endregion
     }
 
@@ -101,13 +101,6 @@ public class CommonProxy {
         event.getRegistry().register(new ItemBlock(ModBlocks.blockGenerator).setRegistryName(ModBlocks.blockGenerator.resourceLocation));
         event.getRegistry().register(new ItemBlock(ModBlocks.blockRedFurnace).setRegistryName(ModBlocks.blockRedFurnace.resourceLocation));
         event.getRegistry().register(new ItemBlock(ModBlocks.blockSolarFurnace).setRegistryName(ModBlocks.blockSolarFurnace.resourceLocation));
-        event.getRegistry().register(new ItemBlock(ModBlocks.blockCreativeGenerator){
-            //effet de brillance
-            @Override
-            public boolean hasEffect(ItemStack stack) {
-                return true;
-            }
-        }.setRegistryName(ModBlocks.blockCreativeGenerator.resourceLocation));
     }
 
     //endregion

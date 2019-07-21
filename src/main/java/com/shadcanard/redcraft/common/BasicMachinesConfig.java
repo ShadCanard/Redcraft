@@ -3,7 +3,7 @@ package com.shadcanard.redcraft.common;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraftforge.common.config.Config;
 
-@Config(modid = References.MOD_ID, category = "Basic Machines")
+@Config(modid = References.MOD_ID, category = "Basic Machines", name = "Basic Machines")
 public class BasicMachinesConfig {
 
     @Config.Comment(value = "Maximum amount a basic machine can handle")

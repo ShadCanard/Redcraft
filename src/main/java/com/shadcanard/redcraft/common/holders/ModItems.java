@@ -4,6 +4,7 @@ import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.items.*;
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,6 +20,9 @@ public class ModItems {
 
     @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Items.GOLD_DUST)
     public static ItemGoldDust goldDust;
+
+    @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Items.DEBUG_TOOL)
+    public static ItemDebug debugTool;
 
     @GameRegistry.ObjectHolder(References.MOD_ID + ":" + Names.Items.IRON_BOWL)
     private static ItemIronBowl ironBowl;
@@ -39,5 +43,6 @@ public class ModItems {
         ironBowl.initModel();
         screen.initModel();
         craftmojiTablet.initModel();
+        debugTool.initModel();
     }
 }

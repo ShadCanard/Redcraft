@@ -3,6 +3,7 @@ package com.shadcanard.redcraft.common.blocks.machine;
 import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.BlockBase;
 import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
+import com.shadcanard.redcraft.common.holders.ModItems;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyDirection;
@@ -23,6 +24,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -32,6 +37,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
@@ -154,5 +160,26 @@ public abstract class BlockMachineBase extends BlockBase implements ITileEntityP
             }
         }
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        super.onBlockActivated(worldIn,pos,state,playerIn,hand,facing,hitX,hitY,hitZ);
+        if(!worldIn.isRemote) {
+            if (playerIn.inventory.getCurrentItem().getItem() == ModItems.debugTool) {
+                playerIn.sendMessage(new TextComponentString("Debug Infos sent on console. Please read your logs.").setStyle(new Style().setColor(TextFormatting.RED)));
+                if (((TileMachineBase) worldIn.getTileEntity(pos)).getDebug() != null) {
+                    TileEntity te = worldIn.getTileEntity(pos);
+                    if(te instanceof TileMachineBase){
+                        ArrayList<String> debug = ((TileMachineBase) te).getDebug();
+                        for (String line :
+                                debug) {
+                            RedCraft.logger.info(line);
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

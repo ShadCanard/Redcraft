@@ -1,49 +1,54 @@
-package com.shadcanard.redcraft.common.blocks.solarfurnace;
+package com.shadcanard.redcraft.common.items;
 
+import com.shadcanard.redcraft.common.blocks.generator.TileGenerator;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ContainerSolarFurnace extends Container {
+public class ContainerDebug extends Container {
 
-    private final TileSolarFurnace te;
-    private static final int PLAYER_INV_X = 8;
-    private static final int PLAYER_INV_Y = 84;
-    private static final int PROGRESS_ID = 0;
-
-    public ContainerSolarFurnace(IInventory playerInv, TileSolarFurnace te){
-        this.te = te;
-
+    public ContainerDebug(IInventory playerInv) {
+        super();
         addOwnSlots();
         addPlayerSlots(playerInv);
     }
 
+    private static final int PLAYER_INV_X = 8;
+    private static final int PLAYER_INV_Y = 84;
+    public ItemStackHandler inputStack = new ItemStackHandler(1){
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return true;
+        }
+    };
+
+    @Override
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return true;
+    }
+
+    //region Methods
     private void addOwnSlots() {
-        IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 53;
-        int y = 7;
+        int x = 80;
+        int y = 35;
 
         // Add our own slots
-        for (int i = 0; i < te.getInputStackSize() ; i++) {
-            addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
-            x += References.SLOT_SIZE;
-        }
-        y = 49;
-        x = 53;
-        for (int i = te.getInputStackSize(); i < te.getInputStackSize() + te.getOutputStackSize(); i++){
-            addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
-            x += References.SLOT_SIZE;
-        }
+        addSlotToContainer(new SlotItemHandler(inputStack, 0, x, y));
     }
 
     private void addPlayerSlots(IInventory playerInv) {
@@ -66,11 +71,6 @@ public class ContainerSolarFurnace extends Container {
         }
     }
 
-    @Override
-    public boolean canInteractWith(@Nullable EntityPlayer playerIn) {
-        return te.canInteractWith(playerIn);
-    }
-
     @Nonnull
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
@@ -81,11 +81,11 @@ public class ContainerSolarFurnace extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < TileSolarFurnace.SLOT_SIZE) {
-                if (!this.mergeItemStack(itemstack1, TileSolarFurnace.SLOT_SIZE, this.inventorySlots.size(), true)) {
+            if (index < 1) {
+                if (!this.mergeItemStack(itemstack1, 1, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, TileSolarFurnace.SLOT_SIZE, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -98,21 +98,14 @@ public class ContainerSolarFurnace extends Container {
         return itemstack;
     }
 
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        te.setClientProgress(te.getProgress());
-        for(IContainerListener listener: listeners){
-            listener.sendWindowProperty(this,PROGRESS_ID,te.getProgress());
+    public void onDropItem(EntityPlayer playerIn) {
+        if(inputStack.getStackInSlot(0) != ItemStack.EMPTY){
+            int res = playerIn.inventory.storeItemStack(inputStack.getStackInSlot(0));
+            if(res == -1){
+                playerIn.dropItem(inputStack.getStackInSlot(0),true,true);
+            }
         }
     }
+    //endregion
 
-
-    @Override
-    public void updateProgressBar(int id, int data) {
-        super.updateProgressBar(id, data);
-        if(id == PROGRESS_ID){
-            te.setProgress(data);
-        }
-    }
 }

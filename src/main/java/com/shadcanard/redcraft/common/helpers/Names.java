@@ -6,6 +6,9 @@ public class Names {
         public static final String BLOCK_RED_GENERATOR = "red_generator";
         public static final String BLOCK_RED_FURNACE = "red_furnace";
         public static final String BLOCK_SOLAR_FURNACE = "solar_furnace";
+        public static final String BLOCK_ENERGY_RECEIVER = "energy_receiver";
+        public static final String BLOCK_ENERGY_TRANSMITTER = "energy_transmitter";
+        public static final String BLOCK_ENERGY_STORAGE = "energy_storage";
     }
 
     public class Items{
@@ -16,6 +19,7 @@ public class Names {
         public static final String IRON_BOWL = "iron_bowl";
         public static final String SCREEN = "screen";
         public static final String CRAFTMOJI_TABLET = "craftmoji_tablet";
+        public static final String DEBUG_TOOL = "debugTool";
     }
 
     private class Entities{

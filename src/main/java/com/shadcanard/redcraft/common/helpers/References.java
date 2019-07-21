@@ -26,5 +26,10 @@ public class References {
     public static final int GUI_RED_FURNACE = 1;
     public static final int GUI_SOLAR_FURNACE = 2;
     public static final int GUI_CRAFTMOJI_TABLET = 3;
+    public static final int GUI_DEBUG_TOOL = 4;
+
+
+    //region Variables
+    public static final int SLOT_SIZE = 18;
     //endregion
 }
