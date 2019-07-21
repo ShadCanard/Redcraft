@@ -1,22 +1,39 @@
-<!-- Note that this issue tracker is only for issues with RedCraft.
-     Please fill out all of the fields below. -->
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
 
-Issue description: 
+---
 
-Steps to reproduce: 
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-<!-- If possible, try to reproduce the issue with the latest available versions of everything below.
-     List version numbers; don't just say you're running the "latest". -->
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
-Versions:
-* Minecraft: 
-* Forge: 
-* RedCraft:
+**Expected behavior**
+A clear and concise description of what you expected to happen.
 
-<!-- If you're using RedCraft with other mods, please list them here. 
-     Don't hesitate to mention if there's a mod you highly suspect. Don't forget coremods (Optifine, Sponge, etc.)
--->
-Complete mod list (with versions): 
+**Logs**
+Put your logs in a pastebin and add a link here, if any
 
-<!-- If the relevant logs are longer than a crash report, upload them to a pastebin and link to it -->
-Relevant logs, if any: 
+**Mod List**
+Add your mod list. Don't hesitate to highlight the mod you suspect if any.
+Don't forget to list invasive mods (like Optifine, Sponge, etc)
+
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
+
+**Desktop (please complete the following information):**
+ - RedCraft Version [e.g. 1.0.0]
+ - Forge Version [e.g. 1.12.2-14.23.5.2768]
+ - Minecraft Version [e.g. 1.12.2]
+
+**Additional context**
+Add any other context about the problem here.
