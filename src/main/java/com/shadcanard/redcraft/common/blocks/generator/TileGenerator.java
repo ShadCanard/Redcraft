@@ -42,6 +42,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
 
     private MachineState STATE = MachineState.OFF;
     private int progress = 0;
+    protected int currentItemBurnTime = -1;
     private int clientProgress = -1;
 
     private int clientEnergy = -1;
@@ -204,6 +205,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
         if(!world.isRemote){
             if(progress == 0 && inputStack.getStackInSlot(0) != ItemStack.EMPTY && isItemBurnable(inputStack.getStackInSlot(0))){
                 progress += getVanillaBurnTime(inputStack.getStackInSlot(0));
+                currentItemBurnTime = progress;
                 inputStack.extractItem(0,1,false);
             }
 

@@ -50,15 +50,19 @@ public class GuiGenerator extends GuiContainer {
         progressBarMaxX = guiLeft + ySize - 5;
         progressBarMaxY = progressBarMinY + 5;
 
-        drawEnergyBar(te.getEnergy(), te.getMaxEnergy());
-        drawProgressBar(te.getProgress(), te.getMaxProgress());
+        drawEnergyBar(te.getClientEnergy(), te.getMaxEnergy());
+        drawProgressBar(te.getClientProgress(), te.getMaxProgress());
     }
 
     private void drawEnergyBar(int energy, int maxEnergy){
         drawRect(energyBarMinX,energyBarMinY,energyBarMaxX,energyBarMaxY, 0xff777777);
         int percentage = energy * 100 / maxEnergy;
-        for (int i = 0; i < percentage; i++) {
-            drawVerticalLine((int) (energyBarMinX + 1 + (i*0.725)), energyBarMinY, (energyBarMaxY - 1),0xffdf0000);
+        int totalBarSize = energyBarMaxX - energyBarMinX;
+        int barSize = (totalBarSize * percentage / 100);
+        if(percentage > 0) {
+            for (int y = energyBarMinY + 1; y < energyBarMaxY - 1; y++) {
+                drawHorizontalLine(energyBarMinX + 1, energyBarMinX + 1 + barSize, y, 0xffdf0000);
+            }
         }
     }
 
@@ -66,8 +70,12 @@ public class GuiGenerator extends GuiContainer {
         drawRect(progressBarMinX, progressBarMinY, progressBarMaxX, progressBarMaxY, 0xff777777);
         if(progress > 0) {
             int percentage = progress;
-            for (int i = 0; i < (percentage == 100 ? 0 : percentage); i++) {
-                drawVerticalLine((int) (progressBarMinX + 1 + (i * 0.725)), progressBarMinY, (progressBarMaxY - 1), 0xff40cf40);
+            int totalBarSize = progressBarMaxX - progressBarMinX ;
+            int barSize = (totalBarSize * percentage / 100);
+            if(percentage > 0) {
+                for (int y = progressBarMinY + 1; y < progressBarMaxY - 1; y++) {
+                    drawHorizontalLine(progressBarMinX + 1, progressBarMinX + barSize, y, 0xff40cf40);
+                }
             }
         }
     }

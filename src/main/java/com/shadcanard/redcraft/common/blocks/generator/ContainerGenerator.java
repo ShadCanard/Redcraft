@@ -4,6 +4,7 @@ import com.shadcanard.redcraft.common.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.network.Messages;
 import com.shadcanard.redcraft.common.network.PacketSyncMachine;
+import com.shadcanard.redcraft.common.tools.IMachineContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -18,7 +19,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ContainerGenerator extends Container {
+public class ContainerGenerator extends Container implements IMachineContainer {
 
     public ContainerGenerator(IInventory playerInv, TileGenerator te){
         this.te = te;
@@ -31,7 +32,6 @@ public class ContainerGenerator extends Container {
     private static final int PLAYER_INV_X = 8;
     private static final int PLAYER_INV_Y = 84;
     private static final int PROGRESS_ID = 0;
-
     private final TileGenerator te;
 
     //endregion
@@ -110,7 +110,7 @@ public class ContainerGenerator extends Container {
             for (IContainerListener listener : listeners){
                 if(listener instanceof EntityPlayerMP){
                     EntityPlayerMP player = (EntityPlayerMP) listener;
-                    int percentage = 100 - (te.getProgress() * 100 / BasicMachinesConfig.basicMachineMaxProgress);
+                    int percentage = (te.getProgress() * 100 / te.currentItemBurnTime);
                     Messages.INSTANCE.sendTo(new PacketSyncMachine(te.getEnergy(), percentage),player);
                 }
             }
