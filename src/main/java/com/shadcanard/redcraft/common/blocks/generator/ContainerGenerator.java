@@ -1,6 +1,5 @@
 package com.shadcanard.redcraft.common.blocks.generator;
 
-import com.shadcanard.redcraft.common.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.network.Messages;
 import com.shadcanard.redcraft.common.network.PacketSyncMachine;

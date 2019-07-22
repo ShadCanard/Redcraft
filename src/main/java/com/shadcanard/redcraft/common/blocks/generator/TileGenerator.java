@@ -1,12 +1,13 @@
 package com.shadcanard.redcraft.common.blocks.generator;
 
-import com.shadcanard.redcraft.common.BasicGeneratorConfig;
-import com.shadcanard.redcraft.common.BasicMachinesConfig;
+import com.shadcanard.redcraft.common.config.BasicGeneratorConfig;
+import com.shadcanard.redcraft.common.config.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.blocks.machine.MachineState;
 import com.shadcanard.redcraft.common.blocks.machine.TileMachineBase;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.tools.RedcraftEnergyStorage;
+import com.sun.istack.internal.NotNull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +22,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -38,18 +38,18 @@ public class TileGenerator extends TileMachineBase implements ITickable {
     public static final ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_RED_GENERATOR);
     private static final int INPUT_SLOT_SIZE = 1;
     private static final int OUTPUT_SLOT_SIZE = 0;
-    public static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
+    static final int SLOT_SIZE = INPUT_SLOT_SIZE + OUTPUT_SLOT_SIZE;
 
     private MachineState STATE = MachineState.OFF;
     private int progress = 0;
-    protected int currentItemBurnTime = -1;
+    int currentItemBurnTime = -1;
     private int clientProgress = -1;
 
     private int clientEnergy = -1;
 
     //region Handlers
     private final RedcraftEnergyStorage energyStorage = new RedcraftEnergyStorage(BasicMachinesConfig.basicMachineMaxPower, 0,0);
-    public final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
+    private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileGenerator.this.markDirty();
@@ -85,7 +85,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
     }
 
 
-    public static int getMaxProgress() {
+    private static int getMaxProgress() {
         return BasicMachinesConfig.basicMachineMaxProgress;
     }
 
@@ -93,7 +93,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
         return clientEnergy;
     }
 
-    public void setClientEnergy(int clientEnergy) {
+    void setClientEnergy(int clientEnergy) {
         this.clientEnergy = clientEnergy;
     }
 
@@ -107,7 +107,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
 
     /**
      * Sets the current state of a block. Detects if the block's state is different of the current block state. If so, updates the block Client Side
-     * @param STATE
+     * @param STATE State of the machine
      */
     public void setState(MachineState STATE) {
         if(this.STATE != STATE){
@@ -119,6 +119,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
         this.STATE = STATE;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbtTagCompound = super.getUpdateTag();
@@ -135,8 +136,8 @@ public class TileGenerator extends TileMachineBase implements ITickable {
 
     /**
      * Will be called server side each time an update is needed
-     * @param net
-     * @param pkt
+     * @param net Network Manager for communication
+     * @param pkt Package to send
      */
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -200,6 +201,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
         return getVanillaBurnTime(item) > 0;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void update() {
         if(!world.isRemote){
@@ -245,6 +247,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
             EnumFacing opposite = face.getOpposite();
             if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, opposite)){
                 IEnergyStorage capability = te.getCapability(CapabilityEnergy.ENERGY, opposite);
+                assert capability != null;
                 if(capability.canReceive()){
                     int canSend = energyStored >= BasicGeneratorConfig.redGeneratorMaxOutput ? BasicGeneratorConfig.redGeneratorMaxOutput : energyStored;
                     int drained = capability.receiveEnergy(canSend,false);
@@ -257,7 +260,7 @@ public class TileGenerator extends TileMachineBase implements ITickable {
     @Override
     public ArrayList<String> getDebug() {
 
-        ArrayList<String> out = new ArrayList<String>();
+        ArrayList<String> out = new ArrayList<>();
         out.add("Energy Capacity: " + energyStorage.getMaxEnergyStored() + "RF");
         out.add("Current Energy: " + energyStorage.getEnergyStored() + "RF");
         out.add("Current Progress: " + progress + " / " + getMaxProgress());

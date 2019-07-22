@@ -1,4 +1,4 @@
-package com.shadcanard.redcraft.common;
+package com.shadcanard.redcraft.common.config;
 
 
 import com.shadcanard.redcraft.common.helpers.References;

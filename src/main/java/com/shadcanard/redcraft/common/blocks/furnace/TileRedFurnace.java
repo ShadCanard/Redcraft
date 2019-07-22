@@ -1,11 +1,10 @@
 package com.shadcanard.redcraft.common.blocks.furnace;
 
-import com.shadcanard.redcraft.common.BasicMachinesConfig;
+import com.shadcanard.redcraft.common.config.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.blocks.machine.MachineState;
 import com.shadcanard.redcraft.common.blocks.machine.TileMachineBase;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
-import com.shadcanard.redcraft.common.helpers.SmeltingHelper;
 import com.shadcanard.redcraft.common.tools.RedcraftEnergyStorage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,11 +13,9 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -45,7 +42,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
 
     //region Handlers
     private final RedcraftEnergyStorage energyStorage = new RedcraftEnergyStorage(BasicMachinesConfig.basicMachineMaxPower, BasicMachinesConfig.basicMachineMaxReceive);
-    public final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
+    private final ItemStackHandler inputStack = new ItemStackHandler(INPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileRedFurnace.this.markDirty();
@@ -56,7 +53,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
             return !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty();
         }
     };
-    public final ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
+    private final ItemStackHandler outputStack = new ItemStackHandler(OUTPUT_SLOT_SIZE){
         @Override
         protected void onContentsChanged(int slot) {
             TileRedFurnace.this.markDirty();
@@ -100,7 +97,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
     }
 
 
-    public static int getMaxProgress() {
+    private static int getMaxProgress() {
         return BasicMachinesConfig.basicMachineMaxProgress;
     }
 
@@ -108,7 +105,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
         return clientEnergy;
     }
 
-    public void setClientEnergy(int clientEnergy) {
+    void setClientEnergy(int clientEnergy) {
         this.clientEnergy = clientEnergy;
     }
 
@@ -122,7 +119,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
 
     /**
      * Sets the current state of a block. Detects if the block's state is different of the current block state. If so, updates the block Client Side
-     * @param STATE
+     * @param STATE State of the machine
      */
     public void setState(MachineState STATE) {
         if(this.STATE != STATE){
@@ -134,6 +131,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
         this.STATE = STATE;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbtTagCompound = super.getUpdateTag();
@@ -150,8 +148,8 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
 
     /**
      * Will be called server side each time an update is needed
-     * @param net
-     * @param pkt
+     * @param net Network Manager for comms
+     * @param pkt Package to receive
      */
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -281,7 +279,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
 
     @Override
     public ArrayList<String> getDebug() {
-        ArrayList<String> out = new ArrayList<String>();
+        ArrayList<String> out = new ArrayList<>();
         out.add("Energy Capacity: " + energyStorage.getMaxEnergyStored() + "RF");
         out.add("Current Energy: " + energyStorage.getEnergyStored() + "RF");
         out.add("Current Progress: " + progress + " / " + getMaxProgress());
