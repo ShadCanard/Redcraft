@@ -205,22 +205,22 @@ public class TileGenerator extends TileMachineBase implements ITickable {
     @Override
     public void update() {
         if(!world.isRemote){
-            if(Minecraft.getMinecraft().world.getRedstonePower(pos,null) < 15){
-                if(progress == 0 && inputStack.getStackInSlot(0) != ItemStack.EMPTY && isItemBurnable(inputStack.getStackInSlot(0))){
+            if(progress == 0 && inputStack.getStackInSlot(0) != ItemStack.EMPTY && isItemBurnable(inputStack.getStackInSlot(0))){
+                if(getEnergy() < getMaxEnergy()) {
                     progress += getVanillaBurnTime(inputStack.getStackInSlot(0));
                     currentItemBurnTime = progress;
-                    inputStack.extractItem(0,1,false);
+                    inputStack.extractItem(0, 1, false);
                 }
-                generatePower();
-            }else{
-                STATE = MachineState.OFF;
             }
-        sendOutEnergy();
+            generatePower();
+        }else{
+            STATE = MachineState.OFF;
         }
+        sendOutEnergy();
     }
 
     private void generatePower() {
-        if(progress > 0){
+        if(progress > 0 && getEnergy() < getMaxEnergy()){
             energyStorage.generatePower(BasicGeneratorConfig.redGeneratorRfPerTick);
             progress--;
             if(STATE != MachineState.WORKING){

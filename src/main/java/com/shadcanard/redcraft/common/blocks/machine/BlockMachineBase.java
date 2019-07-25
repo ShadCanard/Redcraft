@@ -49,7 +49,7 @@ public abstract class BlockMachineBase extends BlockBase implements ITileEntityP
     /**
      * Contains the direction the block is facing horizontally (it cannot face up/downwards
      */
-    private static final PropertyDirection FACING = BlockHorizontal.FACING;
+    protected static final PropertyDirection FACING = BlockHorizontal.FACING;
 
     /**
      * Contains the current state of the block (ON/OFF)

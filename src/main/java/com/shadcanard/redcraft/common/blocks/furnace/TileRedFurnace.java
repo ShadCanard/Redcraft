@@ -78,6 +78,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
     public int getClientProgress() {
         return clientProgress;
     }
+
     void setClientProgress(int clientProgress) {
         this.clientProgress = clientProgress;
     }
@@ -85,6 +86,7 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
     public int getProgress() {
         return progress;
     }
+
     void setProgress(int progress) {
         this.progress = progress;
     }
@@ -111,6 +113,10 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
 
     public int getEnergy(){
         return energyStorage.getEnergyStored();
+    }
+
+    public int getMaxEnergy() {
+        return energyStorage.getMaxEnergyStored();
     }
 
     public MachineState getState() {
@@ -271,10 +277,6 @@ public class TileRedFurnace extends TileMachineBase implements ITickable {
                 startSmelt();
             }
         }
-    }
-
-    public int getMaxEnergy() {
-        return energyStorage.getMaxEnergyStored();
     }
 
     @Override

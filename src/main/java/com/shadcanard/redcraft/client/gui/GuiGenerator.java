@@ -59,7 +59,7 @@ public class GuiGenerator extends GuiContainer {
         int barSize = GuiHelper.GetBarEndX(progressBarMinX,percentage,progressBarMaxX);
         if(percentage > 0) {
             for (int y = energyBarMinY + 1; y < energyBarMaxY - 1; y++) {
-                drawHorizontalLine(energyBarMinX + 1, energyBarMinX + 1 + barSize, y, GuiHelper.ENERGY_BAR_COLOR);
+                drawHorizontalLine(energyBarMinX + 1, energyBarMinX + 1 + barSize - 3, y, GuiHelper.ENERGY_BAR_COLOR);
             }
         }
     }

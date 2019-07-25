@@ -1,7 +1,13 @@
 package com.shadcanard.redcraft.common.blocks.solarfurnace;
 
+import com.shadcanard.redcraft.common.config.BasicMachinesConfig;
+import com.shadcanard.redcraft.common.config.SolarMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.References;
+import com.shadcanard.redcraft.common.network.Messages;
+import com.shadcanard.redcraft.common.network.PacketSyncMachine;
+import com.shadcanard.redcraft.common.tools.IMachineContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
@@ -14,7 +20,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ContainerSolarFurnace extends Container {
+public class ContainerSolarFurnace extends Container implements IMachineContainer {
 
     private final TileSolarFurnace te;
     private static final int PLAYER_INV_X = 8;
@@ -99,20 +105,30 @@ public class ContainerSolarFurnace extends Container {
     }
 
     @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        te.setClientProgress(te.getProgress());
-        for(IContainerListener listener: listeners){
-            listener.sendWindowProperty(this,PROGRESS_ID,te.getProgress());
-        }
-    }
-
-
-    @Override
     public void updateProgressBar(int id, int data) {
         super.updateProgressBar(id, data);
         if(id == PROGRESS_ID){
             te.setProgress(data);
         }
+    }
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        if(te.getProgress() != te.getClientProgress() || te.energyStorage.getCapacity() != te.getClientEnergy()){
+            te.setClientEnergy(te.getEnergy());
+            te.setClientProgress(te.getProgress());
+            for (IContainerListener listener : listeners){
+                if(listener instanceof EntityPlayerMP){
+                    EntityPlayerMP player = (EntityPlayerMP) listener;
+                    int percentage = 100 - (te.getProgress() * 100 / SolarMachinesConfig.solarMachineMaxProgress);
+                    Messages.INSTANCE.sendTo(new PacketSyncMachine(te.getEnergy(), percentage),player);
+                }
+            }
+        }
+    }
+
+    public void sync(int energy, int progress) {
+        te.setClientEnergy(energy);
+        te.setClientProgress(progress);
     }
 }

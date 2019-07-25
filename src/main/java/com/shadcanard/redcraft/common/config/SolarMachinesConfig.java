@@ -11,4 +11,10 @@ public class SolarMachinesConfig {
 
     @Config.Comment("Does the solar machines have an internal storage ?")
     public static boolean doesSolarHaveRfStorage = true;
+
+    @Config.Comment("How many RF per tick the Solar Machine generates")
+    public static int solarMachineRfPerTickGeneration = 20;
+
+    @Config.Comment("How many RF per tick the Solar Machine consumes")
+    public static int getSolarMachineRfPerTickConsumption = 20;
 }

@@ -1,5 +1,9 @@
 package com.shadcanard.redcraft.common.blocks.solarfurnace;
 
+import com.shadcanard.redcraft.common.blocks.machine.MachineState;
+import com.shadcanard.redcraft.common.blocks.machine.TileMachineBase;
+import com.shadcanard.redcraft.common.config.BasicMachinesConfig;
+import com.shadcanard.redcraft.common.config.SolarMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.tools.RedcraftEnergyStorage;
@@ -19,9 +23,10 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 @SuppressWarnings("SameReturnValue")
-public class TileSolarFurnace extends TileEntity implements ITickable {
+public class TileSolarFurnace extends TileMachineBase implements ITickable {
 
     //region Variables
     private static final int INPUT_SLOT_SIZE = 4;
@@ -32,9 +37,11 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     private static final int MAX_ENERGY_STORED = 50000;
     private static final int RF_GENERATED_PER_TICK = 5;
     public static final ResourceLocation resourceLocation = new ResourceLocation(References.MOD_ID, "tile_" + Names.Blocks.BLOCK_SOLAR_FURNACE);
-    private boolean isWorking = false;
+    public boolean canWork = false;
     private int progress = 0;
     private int clientProgress = -1;
+    private int clientEnergy = -1;
+    private MachineState STATE;
 
     //endregion
 
@@ -77,6 +84,22 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
     }
     void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public int getClientEnergy() {
+        return clientEnergy;
+    }
+
+    void setClientEnergy(int clientEnergy) {
+        this.clientEnergy = clientEnergy;
+    }
+
+    public int getEnergy(){
+        return energyStorage.getEnergyStored();
+    }
+
+    public int getMaxEnergy() {
+        return energyStorage.getMaxEnergyStored();
     }
 
 
@@ -156,7 +179,7 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputStack.getStackInSlot(i));
             if(!result.isEmpty()){
                 if(insertOutput(result.copy(),true)){
-                    progress = MAX_PROGRESS;
+                    progress = SolarMachinesConfig.solarMachineMaxProgress;
                     markDirty();
                 }
                 break;
@@ -184,38 +207,103 @@ public class TileSolarFurnace extends TileEntity implements ITickable {
         return false;
     }
 
-    public boolean isWorking(){
-        return isWorking;
-    }
 
     @Override
     public void update() {
-        if(!world.isRemote) {
-            if(!hasContent()){
-                isWorking = false;
-               progress = MAX_PROGRESS;
-            }else {
-                if (world.canBlockSeeSky(pos.up()) && world.isDaytime())
-                    energyStorage.setEnergy(energyStorage.getEnergyStored() + RF_GENERATED_PER_TICK);
-                if (energyStorage.getEnergyStored() < RF_PER_TICK) {
-                    isWorking = false;
-                    return;
+        if(!world.isRemote){
+
+            checkEnergy();
+
+            boolean canProcess = false;
+            for (int i = 0; i < getInputStackSize(); i++) {
+                if(!inputStack.getStackInSlot(i).isEmpty()) canProcess = true;
+            }
+
+            if(!canProcess) setProgress(0);
+
+            if(!SolarMachinesConfig.doesSolarHaveRfStorage && !canWork) return;
+
+            if(energyStorage.getEnergyStored() < BasicMachinesConfig.basicMachineRfPerTick) return;
+
+            if(progress > 0) {
+                setState(MachineState.WORKING);
+                int countProcessing = 0;
+                for (int i = 0; i < getInputStackSize(); i++) {
+                    if(!inputStack.getStackInSlot(i).isEmpty()) countProcessing++;
                 }
-                isWorking = true;
-                if (progress > 0) {
+
+                if(!SolarMachinesConfig.doesSolarHaveRfStorage){
                     progress--;
-                    energyStorage.consumePower(RF_PER_TICK);
-                    isWorking = true;
-                    if (progress <= 0) {
-                        attemptSmelt();
-                        isWorking = false;
-                    }
-                    markDirty();
-                } else {
-                    startSmelt();
                 }
+                if(energyStorage.getEnergyStored() > BasicMachinesConfig.basicMachineRfPerTick * countProcessing){
+                    progress--;
+                    energyStorage.consumePower(BasicMachinesConfig.basicMachineRfPerTick * countProcessing);
+                }
+
+                if (progress <= 0) {
+                    attemptSmelt();
+                }
+                markDirty();
+            } else {
+                startSmelt();
             }
         }
+    }
+
+    private void setState(MachineState StateIn) {
+        STATE = StateIn;
+    }
+
+    /**
+     * energy generation
+     */
+    private void checkEnergy() {
+        if(world.canBlockSeeSky(pos.up()) && world.isDaytime()){
+            if(SolarMachinesConfig.doesSolarHaveRfStorage){
+                energyStorage.generatePower(SolarMachinesConfig.solarMachineRfPerTickGeneration);
+            }else{
+                canWork = true;
+            }
+        }
+    }
+
+
+    @Override
+    public ArrayList<String> getDebug() {
+        ArrayList<String> out = new ArrayList<>();
+        out.add("Energy Capacity: " + energyStorage.getMaxEnergyStored() + "RF");
+        out.add("Current Energy: " + energyStorage.getEnergyStored() + "RF");
+        out.add("Current Progress: " + progress + " / " + getMaxProgress());
+
+        out.add("------ INPUT SLOTS ------");
+        for (int i = 0; i < INPUT_SLOT_SIZE; i++) {
+            ItemStack stack = inputStack.getStackInSlot(i);
+            if(stack == ItemStack.EMPTY){
+                out.add("--- No stack in input slot " + i + " ---");
+            }else{
+                out.add("--- Stack in input slot " + i + " ---");
+                out.add("Name : " + stack.getDisplayName());
+                out.add("Size : " + stack.getCount());
+                out.add("Is burnable : " + !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty());
+                out.add("Is Fuel : " + (net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack) >= 0));
+                out.add("Fuel time : " + net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack));
+            }
+        }
+        out.add("------ OUTPUT SLOTS ------");
+        for (int i = 0; i < OUTPUT_SLOT_SIZE; i++) {
+            ItemStack stack = outputStack.getStackInSlot(i);
+            if(stack == ItemStack.EMPTY){
+                out.add("--- No stack in input slot " + i + " ---");
+            }else{
+                out.add("--- Stack in input slot " + i + " ---");
+                out.add("Name : " + stack.getDisplayName());
+                out.add("Size : " + stack.getCount());
+                out.add("Is burnable : " + !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty());
+                out.add("Is Fuel : " + (net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack) >= 0));
+                out.add("Fuel time : " + net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack));
+            }
+        }
+        return out;
     }
 
     //endregion
