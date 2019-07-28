@@ -1,13 +1,10 @@
-package com.shadcanard.redcraft.common.blocks.generator;
+package com.shadcanard.redcraft.common.blocks.furnace.poweredfurnace;
 
 import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.machine.BlockMachineBase;
-import com.shadcanard.redcraft.common.helpers.MathHelper;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
-import com.shadcanard.redcraft.common.tools.RedcraftEnergyStorage;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,20 +14,18 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
-public class BlockGenerator extends BlockMachineBase {
-    public BlockGenerator() {
-        super(Names.Blocks.BLOCK_RED_GENERATOR);
+public class BlockRedFurnace extends BlockMachineBase {
+    public BlockRedFurnace() {
+        super(Names.Blocks.BLOCK_RED_FURNACE);
     }
 
+    @Nullable
     @Override
-    public TileEntity createNewTileEntity(@Nullable World worldIn, int meta) {
-        return new TileGenerator();
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        return new TileRedFurnace();
     }
 
     @Override
@@ -38,10 +33,10 @@ public class BlockGenerator extends BlockMachineBase {
         super.onBlockActivated(worldIn,pos,state,playerIn,hand,facing,hitX,hitY,hitZ);
         if(!worldIn.isRemote){
             TileEntity te = worldIn.getTileEntity(pos);
-            if(!(te instanceof TileGenerator)){
+            if(!(te instanceof TileRedFurnace)){
                 return false;
             }
-            playerIn.openGui(RedCraft.instance, References.GUI_GENERATOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.openGui(RedCraft.instance, References.GUI_RED_FURNACE, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
     }

@@ -1,6 +1,5 @@
-package com.shadcanard.redcraft.common.blocks.solarfurnace;
+package com.shadcanard.redcraft.common.blocks.furnace.solarfurnace;
 
-import com.shadcanard.redcraft.common.config.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.config.SolarMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.network.Messages;

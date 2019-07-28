@@ -1,6 +1,5 @@
-package com.shadcanard.redcraft.common.blocks.furnace;
+package com.shadcanard.redcraft.common.blocks.generator.burninggenerator;
 
-import com.shadcanard.redcraft.common.config.BasicMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.network.Messages;
 import com.shadcanard.redcraft.common.network.PacketSyncMachine;
@@ -19,9 +18,9 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ContainerRedFurnace extends Container implements IMachineContainer {
+public class ContainerGenerator extends Container implements IMachineContainer {
 
-    public ContainerRedFurnace(IInventory playerInv, TileRedFurnace te){
+    public ContainerGenerator(IInventory playerInv, TileGenerator te){
         this.te = te;
 
         addOwnSlots();
@@ -32,25 +31,18 @@ public class ContainerRedFurnace extends Container implements IMachineContainer 
     private static final int PLAYER_INV_X = 8;
     private static final int PLAYER_INV_Y = 84;
     private static final int PROGRESS_ID = 0;
-
-    private final TileRedFurnace te;
+    private final TileGenerator te;
 
     //endregion
 
     //region Methods
     private void addOwnSlots() {
         IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 53;
-        int y = 7;
+        int x = 80;
+        int y = 35;
 
         // Add our own slots
         for (int i = 0; i < te.getInputStackSize() ; i++) {
-            addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
-            x += References.SLOT_SIZE;
-        }
-        y = 49;
-        x = 53;
-        for (int i = te.getInputStackSize(); i < te.getInputStackSize() + te.getOutputStackSize(); i++){
             addSlotToContainer(new SlotItemHandler(itemHandler, i, x, y));
             x += References.SLOT_SIZE;
         }
@@ -91,11 +83,11 @@ public class ContainerRedFurnace extends Container implements IMachineContainer 
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < TileRedFurnace.SLOT_SIZE) {
-                if (!this.mergeItemStack(itemstack1, TileRedFurnace.SLOT_SIZE, this.inventorySlots.size(), true)) {
+            if (index < TileGenerator.SLOT_SIZE) {
+                if (!this.mergeItemStack(itemstack1, TileGenerator.SLOT_SIZE, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, TileRedFurnace.SLOT_SIZE, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, TileGenerator.SLOT_SIZE, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -117,7 +109,7 @@ public class ContainerRedFurnace extends Container implements IMachineContainer 
             for (IContainerListener listener : listeners){
                 if(listener instanceof EntityPlayerMP){
                     EntityPlayerMP player = (EntityPlayerMP) listener;
-                    int percentage = 100 - (te.getProgress() * 100 / BasicMachinesConfig.basicMachineMaxProgress);
+                    int percentage = (te.getProgress() * 100 / te.currentItemBurnTime);
                     Messages.INSTANCE.sendTo(new PacketSyncMachine(te.getEnergy(), percentage),player);
                 }
             }
@@ -130,4 +122,5 @@ public class ContainerRedFurnace extends Container implements IMachineContainer 
     }
 
     //endregion
+
 }

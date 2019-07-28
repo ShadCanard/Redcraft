@@ -2,9 +2,9 @@ package com.shadcanard.redcraft.common.holders;
 
 import com.shadcanard.redcraft.common.RedCraft;
 import com.shadcanard.redcraft.common.blocks.basic.BlockRedIngot;
-import com.shadcanard.redcraft.common.blocks.furnace.BlockRedFurnace;
-import com.shadcanard.redcraft.common.blocks.generator.BlockGenerator;
-import com.shadcanard.redcraft.common.blocks.solarfurnace.BlockSolarFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.poweredfurnace.BlockRedFurnace;
+import com.shadcanard.redcraft.common.blocks.generator.burninggenerator.BlockGenerator;
+import com.shadcanard.redcraft.common.blocks.furnace.solarfurnace.BlockSolarFurnace;
 import com.shadcanard.redcraft.common.helpers.Names;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraftforge.fml.common.registry.GameRegistry;

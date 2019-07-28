@@ -4,12 +4,12 @@ import com.shadcanard.redcraft.client.gui.GuiDebugTool;
 import com.shadcanard.redcraft.client.gui.GuiGenerator;
 import com.shadcanard.redcraft.client.gui.GuiRedFurnace;
 import com.shadcanard.redcraft.client.gui.GuiSolarFurnace;
-import com.shadcanard.redcraft.common.blocks.furnace.ContainerRedFurnace;
-import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
-import com.shadcanard.redcraft.common.blocks.generator.ContainerGenerator;
-import com.shadcanard.redcraft.common.blocks.generator.TileGenerator;
-import com.shadcanard.redcraft.common.blocks.solarfurnace.ContainerSolarFurnace;
-import com.shadcanard.redcraft.common.blocks.solarfurnace.TileSolarFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.poweredfurnace.ContainerRedFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.poweredfurnace.TileRedFurnace;
+import com.shadcanard.redcraft.common.blocks.generator.burninggenerator.ContainerGenerator;
+import com.shadcanard.redcraft.common.blocks.generator.burninggenerator.TileGenerator;
+import com.shadcanard.redcraft.common.blocks.furnace.solarfurnace.ContainerSolarFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.solarfurnace.TileSolarFurnace;
 import com.shadcanard.redcraft.common.helpers.References;
 import com.shadcanard.redcraft.common.items.ContainerDebug;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 public class GuiHandler implements IGuiHandler {
 

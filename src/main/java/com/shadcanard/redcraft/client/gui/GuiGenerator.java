@@ -1,7 +1,7 @@
 package com.shadcanard.redcraft.client.gui;
 
-import com.shadcanard.redcraft.common.blocks.generator.ContainerGenerator;
-import com.shadcanard.redcraft.common.blocks.generator.TileGenerator;
+import com.shadcanard.redcraft.common.blocks.generator.burninggenerator.ContainerGenerator;
+import com.shadcanard.redcraft.common.blocks.generator.burninggenerator.TileGenerator;
 import com.shadcanard.redcraft.common.helpers.GuiHelper;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraft.client.gui.inventory.GuiContainer;

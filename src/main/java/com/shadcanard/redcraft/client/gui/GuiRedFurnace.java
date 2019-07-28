@@ -1,7 +1,7 @@
 package com.shadcanard.redcraft.client.gui;
 
-import com.shadcanard.redcraft.common.blocks.furnace.ContainerRedFurnace;
-import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.poweredfurnace.ContainerRedFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.poweredfurnace.TileRedFurnace;
 import com.shadcanard.redcraft.common.helpers.GuiHelper;
 import com.shadcanard.redcraft.common.helpers.References;
 import net.minecraft.client.gui.inventory.GuiContainer;

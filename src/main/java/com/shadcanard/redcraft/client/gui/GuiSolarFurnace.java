@@ -1,14 +1,10 @@
 package com.shadcanard.redcraft.client.gui;
 
-import com.shadcanard.redcraft.common.RedCraft;
-import com.shadcanard.redcraft.common.blocks.furnace.ContainerRedFurnace;
-import com.shadcanard.redcraft.common.blocks.furnace.TileRedFurnace;
-import com.shadcanard.redcraft.common.blocks.solarfurnace.ContainerSolarFurnace;
-import com.shadcanard.redcraft.common.blocks.solarfurnace.TileSolarFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.solarfurnace.ContainerSolarFurnace;
+import com.shadcanard.redcraft.common.blocks.furnace.solarfurnace.TileSolarFurnace;
 import com.shadcanard.redcraft.common.config.SolarMachinesConfig;
 import com.shadcanard.redcraft.common.helpers.GuiHelper;
 import com.shadcanard.redcraft.common.helpers.References;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -45,6 +41,7 @@ public class GuiSolarFurnace extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        drawCanWork();
         energyBarMinX = guiLeft + 51;
         energyBarMinY = guiTop + 25;
         energyBarMaxX = guiLeft + 125;
@@ -57,7 +54,6 @@ public class GuiSolarFurnace extends GuiContainer {
 
         if(SolarMachinesConfig.doesSolarHaveRfStorage) drawEnergyBar(te.getClientEnergy(), te.getMaxEnergy());
         drawProgressBar(te.getClientProgress());
-        drawCanWork();
     }
 
     private void drawEnergyBar(int energy, int maxEnergy){
@@ -66,7 +62,7 @@ public class GuiSolarFurnace extends GuiContainer {
         int barSize = GuiHelper.GetBarEndX(progressBarMinX,percentage,progressBarMaxX);
         if(percentage > 0) {
             for (int y = energyBarMinY + 1; y < energyBarMaxY - 1; y++) {
-                drawHorizontalLine(energyBarMinX + 1, energyBarMinX + 1 + barSize - 3, y, GuiHelper.ENERGY_BAR_COLOR);
+                drawHorizontalLine(energyBarMinX + 1, energyBarMinX + 1 + barSize - (barSize > energyBarMinX + 1 ? 0 : 3), y, GuiHelper.ENERGY_BAR_COLOR);
             }
         }
     }
@@ -85,10 +81,20 @@ public class GuiSolarFurnace extends GuiContainer {
     }
 
     private void drawCanWork(){
-        World world = Minecraft.getMinecraft().world;
-        boolean canWork = world.canBlockSeeSky(te.getPos().up()) && world.isDaytime();
-        drawRect(guiLeft + 4, guiTop + 4, guiLeft + 14, guiTop + 14, GuiHelper.BACKGROUND_BAR_COLOR);
-        drawRect(guiLeft + 5, guiTop + 5, guiLeft + 13, guiTop + 13, canWork ? GuiHelper.PROGRESS_BAR_COLOR : GuiHelper.ENERGY_BAR_COLOR);
+        drawIsDay();
+        drawCanSeeSky();
+    }
+
+    private void drawCanSeeSky(){
+        World world = te.getWorld();
+        boolean canSeeSky = world.canBlockSeeSky(te.getPos().up());
+        drawRect(guiLeft + 5, guiTop + 5, guiLeft + 5 + 16, guiTop + 5 + 16, canSeeSky ? 0xFF87CEEB : 0xff707070);
+    }
+
+    private void drawIsDay(){
+        World world = te.getWorld();
+        boolean isDaytime = world.isDaytime();
+        drawTexturedModalRect( guiLeft + 5, guiTop + 5 + 16, xSize, (isDaytime ? 0:16), 16,16 );
     }
 
     @Override
@@ -103,6 +109,12 @@ public class GuiSolarFurnace extends GuiContainer {
         if(mouseX > progressBarMinX && mouseX < progressBarMaxX && mouseY > progressBarMinY && mouseY < progressBarMaxY){
             int percentage = te.getClientProgress();
             drawHoveringText(Collections.singletonList("Progress : " + (percentage == 100 ? "0" : percentage) + "%"), mouseX, mouseY, fontRenderer);
+        }
+        if(mouseX > guiLeft + 5 && mouseX < guiLeft + 5 + 16 && mouseY > guiTop + 5 && mouseY < guiTop + 5 + 16){
+            drawHoveringText(Collections.singletonList("Can see sky ? " + (te.getWorld().canBlockSeeSky(te.getPos().up()) ? "Yes" : "No")), mouseX,mouseY,fontRenderer);
+        }
+        if(mouseX > guiLeft + 5 && mouseX < guiLeft + 5 + 16 && mouseY > guiTop + 5 + 16 && mouseY < guiTop + 5 + 32){
+            drawHoveringText(Collections.singletonList("Is Daytime ? " + (te.getWorld().isDaytime() ? "Yes" : "No")), mouseX,mouseY,fontRenderer);
         }
     }
 }

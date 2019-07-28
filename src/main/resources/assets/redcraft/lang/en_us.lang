@@ -1,6 +1,8 @@
 ### BLOCKS
 tile.redcraft.red_block.name=Red Block
 tile.redcraft.red_generator.name=Red Generator
+tile.redcraft.solar_furnace.name=Solar Furnace
+tile.redcraft.red_furnace.name=Red Furnace
 
 ### ITEMS
 item.redcraft.red_ingot.name=Red Ingot
@@ -8,7 +10,8 @@ item.redcraft.red_dust.name=Red Dust
 item.redcraft.gold_dust.name=Gold Dust
 item.redcraft.iron_bowl.name=Iron Bowl
 item.redcraft.screen.name=Screen
-
+item.redcraft.craftmoji_tablet.name=Craftmoji Tablet
+item.redcraft.debugTool.name=Debug Tool (Do not use !)
 
 ### MISC
 itemGroup.redcraft_machines=RedCraft Machines
